@@ -1,0 +1,309 @@
+---
+title: "Computation for Linguists"
+subtitle: "Learning the Command Line: Files and Directories"
+date: "August 31, 2026"
+author: "Dr. Andrew M. Byrd"
+format:
+  revealjs:
+    css: header_shrink.css
+    theme: beige
+    slide-number: true
+    center: true
+    toc: true
+    toc-title: "Plan for the Day"
+    toc-depth: 1
+editor: visual
+---
+
+# Review
+
+## Review: So far, you have learned about...
+
+-   **File structure & dependencies**
+
+    -   Setting up VSCode and Git, and why your folders need to be organized consistently
+    -   How Git tracks every file in your repo — which only works if you know where things live
+
+## Review: So far, you have learned about...
+
+-   **Commands as instructions**
+    -   Git commands (`git commit`, `git push`) are precise instructions with their own syntax
+    -   You've already run a few in the terminal without necessarily calling it that
+
+## Review: So far, you have learned about...
+
+-   **Reproducibility & automation**
+    -   Git gives you a full history of every change — you can always get back to a working version
+    -   This week, the terminal will let you automate the same kind of repetitive file tasks
+
+## This week:
+
+![](4_powershell.png){fig-alt="An Picture of Windows \"Powershell\", a Unix-style Terminal"}
+
+## You may be thinking:
+
+-   Nooooooooooooooooooooooooooooo!
+-   I'm still scarred from installing GitHub.
+-   Please let's not go back there.
+
+## But:
+
+-   It's important to understand how the basics work.
+    -   Where do files live?
+    -   How do we navigate between them?
+-   And the above concepts - file structure & dependencies, commands, and reproducibility - will be present here, too.
+
+# Learning the Terminal
+
+## Why start in the terminal?
+
+-   Python always runs **inside a folder** (your working directory).
+-   If you can move, list, and fetch files here, this will make it easier to understand how to access files in Python later.
+-   Same skills for Git and other computational environments, like:
+    -   servers and clients
+    -   clusters (computers set up to work together)
+
+## Why start in the terminal?
+
+-   Also:
+    -   While this isn't the case for me, I've been assured by various linguists that understanding how the Terminal works is crucial for conducting certain types of research, particularly in Phonetics
+
+## Navigating the Terminal
+
+-   We'll be working within the integrated `Terminal` in VSCode (View → Terminal)
+-   Make sure you're running **Bash**, not PowerShell or Command Prompt:
+    -   Open a terminal (View → Terminal)
+    -   Click the small dropdown arrow (˅) next to the **+** in the top-right of the terminal panel
+    -   Select **Git Bash** from the list (it may just be labeled **bash**)
+
+## Navigating the Terminal
+
+-   Let's start with the first command
+
+``` bash
+pwd         # short for "print working directory"
+```
+
+-   What is this "\#" notation?
+
+## Navigating the Terminal
+
+-   You can also look to see what's in the current directory
+
+``` bash
+ls           # short for "listing files"
+```
+
+## Navigating the Terminal
+
+-   Most commands have **options**
+
+``` bash
+ls -l        # details (permissions, size, dates)
+ls -a        # include hidden files (like .git)
+```
+
+## Navigating the Terminal
+
+``` bash
+cd          # short for "change directory"
+```
+
+-   You need to specify which directory to change into
+-   For now, use:
+
+``` bash
+cd ~         
+```
+
+## Navigating the Terminal
+
+-   Type:
+
+``` bash
+ls        
+```
+
+-   Find a directory (dir_name) within it, and type (replacing `dir_name` with the actual directory name):
+
+``` bash
+cd dir_name        
+```
+
+-   This should move you "up" into the directory. Verify this is the case with `ls`.
+
+## Navigating the Terminal
+
+``` bash
+cd projects           # into a folder
+cd ..                 # up one
+cd ~                  # to home
+cd ~/Desktop          # absolute path to Desktop\
+cd "My Folder"        # if there are any spaces in your named folder
+```
+
+## Activity
+
+1.  Type `cd ~`, to bring you to your home directory
+
+2.  Using `pwd` and `ls` as your guide, navigate your way into your `LIN_301` folder
+
+3.  Once there, `cd classwork` — this is where we'll be doing our terminal work for the next three classes
+
+4.  Create a new folder called `4_terminal_files_directories` and `cd` into it — this is where all of today's work will live
+
+5.  Your `301_2026` folder is something you'll `git pull` again later this semester — if you type your own notes or answers directly into the copy that lives there, a future pull could create a merge conflict. So instead, copy today's slides into *this* folder and work from your own copy:
+
+    ``` bash
+    cp ~/301_2026/slides/2_command_prompt/4_terminal_files_directories.qmd .
+    ```
+
+# Making and Renaming Files & Folders
+
+## `mkdir`
+
+-   You should now be in your `LIN_301/classwork/4_terminal_files_directories` folder in the Terminal Prompt
+-   Look in the Explorer panel (left sidebar) in VSCode, what do you see?
+-   Type the following code:
+
+``` bash
+mkdir test_folder     # short for "make directory"
+```
+
+-   Now look in the right corner - did anything change?
+
+## `rmdir`
+
+-   Now type the following code
+
+``` bash
+rmdir test_folder    # short for "remove directory"
+```
+
+-   Look in the Explorer panel in VSCode - did anything change?
+
+## `touch`
+
+-   Now type the following code:
+
+``` bash
+mkdir test_bolder
+touch test_doc.txt
+```
+
+-   Look in the Explorer panel in VSCode - did anything change?
+-   What does `touch` do?
+
+## `mv`
+
+-   We want to place our new `txt` file in the folder, so let's run this code:
+
+``` bash
+mv test_doc.txt test_bolder/    # short for "move"
+```
+
+## `mv`
+
+-   Ah crap, I misspelled `test_bolder`, let's run this code:
+
+``` bash
+mv test_bolder test_folder    # how you rename in bash
+```
+
+## Activity
+
+-   Within your `LIN_301/classwork/4_terminal_files_directories` folder:
+    -   Create a file called `activity.txt`
+    -   Create the following folders: `folder_1` \> `folder_2` \> `folder_3`
+    -   Move `activity.txt` inside `folder_3`
+-   You can *only* use the integrated Terminal in VSCode!
+    -   Use `pwd` and `ls` as your guide
+
+# A Couple More Tricks
+
+## `curl`
+
+-   We all know how to download things from the Internet, but what about using the Terminal?
+-   Type this code:
+
+``` bash
+curl -o term_comm.txt https://winjapati.github.io/courses/301/term_comm.txt
+```
+
+-   This is a useful list of Terminal commands
+-   Move this file into `folder_1`
+
+## `rm -r`
+
+-   Let's learn one more bash command
+
+``` bash
+rm -r folder_1
+```
+
+-   What happens?
+
+## You bastard!
+
+-   Don't worry! Type the following code:
+
+``` bash
+touch script.sh 
+```
+
+## Bringing it Back
+
+-   Copy and paste this **whole block** (using right click) into the Terminal — it already ends with `EOF`, so one paste does the whole thing:
+
+``` bash
+cat > script.sh <<'EOF'      # write everything below into script.sh, until a line that's just EOF
+#!/bin/bash
+# tells the system to run this file with bash
+echo "This is my first script."                                # print a message
+curl -o term_comm.txt https://winjapati.github.io/courses/301/term_comm.txt  # download the file
+mkdir folder_1                                                 # make a new folder
+mv term_comm.txt folder_1                                      # move it into folder_1
+echo term_comm.txt                                             # print the filename
+EOF
+```
+
+-   Don't type `EOF` again afterward — it's already in the block above and closes things out on its own. (If you do type it again by accident, you'll just get `bash: EOF: command not found` — harmless, just hit enter and move on.)
+-   Look inside `script.sh`, what did you do?
+
+## OMG
+
+-   Type:
+
+``` bash
+source script.sh
+```
+
+## `cat`
+
+-   You've now got `script.sh`, and (thanks to the script) `folder_1/term_comm.txt` — let's actually look inside them
+-   `cat` prints a file's entire contents to the screen at once — best for short files
+
+``` bash
+cat script.sh
+```
+
+## `less`
+
+-   For longer files, dumping everything with `cat` gets hard to read — `less` opens it as a scrollable page instead
+
+``` bash
+less folder_1/term_comm.txt
+```
+
+-   Use the up/down arrows to scroll, spacebar to jump down a page, and `q` to quit back to the prompt
+
+# Bonus Activity (If There's Time)
+
+## On Your Own
+
+-   Using only what you've learned today — `mkdir`, `rmdir`, `touch`, `mv`, `curl`, `rm -r`, and writing/sourcing a `.sh` script
+-   Within your `LIN_301/classwork/4_terminal_files_directories` folder:
+    1.  Create a new folder called `day4_files`
+    2.  Move both `test_folder` and `folder_1` inside `day4_files`
+    3.  Download the Terminal command cheat sheet one more time (<https://winjapati.github.io/courses/301/term_comm.txt>), saving it as `cheatsheet.txt`, directly into `day4_files`
+    4.  Write and run a script called `check.sh` that lists everything inside `day4_files` when you `source` it
