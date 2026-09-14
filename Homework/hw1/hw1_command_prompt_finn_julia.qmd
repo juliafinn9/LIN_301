@@ -1,0 +1,2787 @@
+---
+title: "HW 1 — The Command Prompt"
+subtitle: "LIN 301: Computation for Linguists"
+author: "Dr. Andrew M. Byrd"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    code-tools: true
+fontsize: 12pt
+---
+
+## Overview
+
+During class in week 2 you learned how to navigate, create, move, and search files entirely from the Terminal — no mouse required. This assignment asks you to do the same set of tasks on a **new text** (not one we used in class), so you're practicing the skills rather than replaying what you already typed.
+
+By the end, you should be able to:
+
+-   Navigate a file system and create/rename/remove files and folders from the command line.
+-   Write and run a short shell script that automates a repeatable setup task.
+-   Use `wc`, `grep`, and piping (`|`) to count and search inside a text file.
+-   Write basic regular expressions (`grep -E`) to find patterns in text.
+
+You will create **one** Quarto document named `hw1_command_prompt_lastname_firstname.qmd`, living inside a folder called `hw1` in your `homework/` folder — you won't submit this file itself, just a URL pointing to it (see **Submission** below for exactly how that works). For every numbered task below, record in your document: (a) the exact command(s) you typed, in a fenced `bash` code block; (b) whenever a task says "record," "confirm," or otherwise asks you to report a result, the actual terminal output, pasted as a second code block right below the command that produced it; and (c) the answer to any question that's asked. You're documenting what you did in the Terminal — none of these code blocks need to be "run" by Quarto itself.
+
+------------------------------------------------------------------------
+
+## Part 1 — Navigating & Managing Files
+
+Do all of the following inside the integrated Terminal in VSCode. `cd` into your `LIN_301/homework` folder, then create a new folder called `hw1` and `cd` into it — this is where everything for this assignment lives, both your working files and your `.qmd` write-up. Copy the assignment file from your `301_2026` folder into this new folder, renaming it as you go — this becomes the document you'll actually work in:
+
+``` bash
+cp ~/301_2026/homework/hw1_command_prompt.qmd ./hw1_command_prompt_lastname_firstname.qmd
+```
+
+1.  Download *The Adventures of Sherlock Holmes* from Project Gutenberg using `curl`, naming the file `holmes.txt`: `https://www.gutenberg.org/cache/epub/1661/pg1661.txt`.
+```bash 
+ curl -o holmes.txt https://www.gutenberg.org/cache/epub/1661/pg1661.txt
+ ```
+
+2.  Confirm the file downloaded and check its size using `ls -l`.
+```bash
+ls -l holmes.txt
+-rw-r--r--@ 1 juliabaldwin  staff  607606 Sep 13 14:31 holmes.txt
+```
+
+3.  Create three nested folders: `drafts` \> `working` \> `final` (i.e., `working` sits inside `drafts`, and `final` sits inside `working`).
+```bash
+mkdir drafts
+cd drafts
+mkdir working
+cd working
+mkdir final
+```
+
+4.  Use `touch` to create an empty file called `log.txt`.
+``` bash
+touch log.txt
+```
+
+5.  Move `log.txt` into the `final` folder.
+```bash
+mv log.txt final
+```
+
+6.  You've decided `drafts` is a bad name for the top folder — rename it to `notes` (remember: `mv` is also how you rename in bash).
+```bash
+cd ../..
+mv drafts notes
+```
+
+7.  Create one more throwaway folder called `scratch`, then remove it using `rm -r`.
+```bash
+mkdir scratch
+rm -r scratch
+```
+
+8.  **Write a script.** Create a file called `setup.sh` that, when run, does the following in one shot:
+
+    -   creates a new folder called `backup_check`
+    -   downloads `holmes.txt` again into that folder (same `curl` command as step 1, adjusted for the new destination)
+    -   prints a message to the screen confirming the download (`echo`)
+
+    Run your script with `source setup.sh` and confirm it worked with `ls`.
+
+**Question:** What's the difference between `rmdir` and `rm -r`? Why did you need `rm -r` in step 7 and not `rmdir`?
+```bash
+touch setup.sh
+cat > setup.sh <<'EOF'      # write everything below into setup.sh, until a line that's just EOF
+#!/bin/bash                 # tells the system to run this file with bash
+mkdir backup_checkup            # make a new folder
+curl -o backup_checkup/holmes.txt https://www.gutenberg.org/cache/epub/1661/pg1661.txt  # download the file
+echo backup_checkup/holmes.txt                                 # print the filename
+EOF
+mkdir: backup_checkup: File exists
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  593k  100  593k    0     0  1598k      0 --:--:-- --:--:-- --:--:-- 1599k
+backup_checkup/holmes.txt
+Because scratch was an empty folder, I could have used either rmdir or rm-r to remove it.
+```
+------------------------------------------------------------------------
+
+## Part 2 — Counting & Searching
+
+9.  Run `wc`, `wc -l`, and `wc -w` on `holmes.txt`. Record all three outputs.
+```bash
+wc holmes.txt
+12310  107558  607606 holmes.txt
+wc -l holmes.txt
+12310 holmes.txt
+wc -w holmes.txt
+107558 holmes.txt
+```
+
+10. Use `grep` to find every line containing the name **"Watson"**. Then pipe that into `wc -l` to get a single count of how many lines mention him.
+```bash
+grep "Watson" holmes.txt | wc -l
+```
+
+11. Do the same for **"Holmes"**. Which name appears on more lines?
+```bash
+grep "Holmes" holmes.txt | wc -l
+Holmes appears more often than Watson.
+```
+------------------------------------------------------------------------
+
+## Part 3 — Regex Challenges
+
+Using `grep -E` on `holmes.txt`, find each of the following. For each one, write the command you used *and* the answer/result.
+
+1.  Every instance where a word begins with "Holmes" or "Watson."
+```bash
+grep -E "\<(Holmes|Watson)" holmes.txt
+The Project Gutenberg eBook of The Adventures of Sherlock Holmes
+Title: The Adventures of Sherlock Holmes
+The Adventures of Sherlock Holmes
+To Sherlock Holmes she is always _the_ woman. I have seldom heard him
+I had seen little of Holmes lately. My marriage had drifted us away
+while Holmes, who loathed every form of society with his whole Bohemian
+keen desire to see Holmes again, and to know how he was employing his
+“Wedlock suits you,” he remarked. “I think, Watson, that you have put
+fancy, Watson. And in practice again, I observe. You did not tell me
+“My dear Holmes,” said I, “this is too much. You would certainly have
+“Peculiar—that is the very word,” said Holmes. “It is not an English
+“What do you make of that?” asked Holmes.
+wheels against the curb, followed by a sharp pull at the bell. Holmes
+and fifty guineas apiece. There’s money in this case, Watson, if there
+“I think that I had better go, Holmes.”
+“Come in!” said Holmes.
+“Pray take a seat,” said Holmes. “This is my friend and colleague, Dr.
+Watson, who is occasionally good enough to help me in my cases. Whom
+I rose to go, but Holmes caught me by the wrist and pushed me back into
+“I promise,” said Holmes.
+“I was aware of it,” said Holmes dryly.
+“I was also aware of that,” murmured Holmes, settling himself down in
+most incisive reasoner and most energetic agent in Europe. Holmes
+“Why, indeed?” murmured Holmes. “Your Majesty had not spoken before I
+“Then, pray consult,” said Holmes, shutting his eyes once more.
+“Kindly look her up in my index, Doctor,” murmured Holmes without
+“Let me see!” said Holmes. “Hum! Born in New Jersey in the year 1858.
+Holmes laughed. “It is quite a pretty little problem,” said he.
+“Oh, then we have three days yet,” said Holmes with a yawn. “That is
+Holmes scribbled a receipt upon a sheet of his note-book and handed it
+Holmes took a note of it. “One other question,” said he. “Was the
+some good news for you. And good-night, Watson,” he added, as the
+At three o’clock precisely I was at Baker Street, but Holmes had not
+“This was quite too good to lose, Watson. I was just balancing whether
+Holmes changed his costume. His expression, his manner, his very soul
+Sherlock Holmes’ succinct description, but the locality appeared to be
+“You see,” remarked Holmes, as we paced to and fro in front of the
+struck savagely at each other with their fists and sticks. Holmes
+so that I could see Holmes as he lay upon the couch. I do not know
+the injured man. And yet it would be the blackest treachery to Holmes
+Holmes had sat up upon the couch, and I saw him motion like a man who
+the voice of Holmes from within assuring them that it was a false
+“Good-night, Mister Sherlock Holmes.”
+“I’ve heard that voice before,” said Holmes, staring down the dimly lit
+“You have really got it!” he cried, grasping Sherlock Holmes by either
+“Irene Adler is married,” remarked Holmes.
+“Mr. Sherlock Holmes, I believe?” said she.
+“I am Mr. Holmes,” answered my companion, looking at her with a
+“What!” Sherlock Holmes staggered back, white with chagrin and
+Holmes rushed at the bell-pull, tore back a small sliding shutter, and,
+superscribed to “Sherlock Holmes, Esq. To be left till called for.” My
+    really an object of interest to the celebrated Mr. Sherlock Holmes.
+    possess; and I remain, dear Mr. Sherlock Holmes,
+different level to your Majesty,” said Holmes coldly. “I am sorry that
+said Holmes.
+Bohemia, and how the best plans of Mr. Sherlock Holmes were beaten by a
+ I had called upon my friend, Mr. Sherlock Holmes, one day in the
+ apology for my intrusion, I was about to withdraw when Holmes pulled
+“You could not possibly have come at a better time, my dear Watson,” he
+“Try the settee,” said Holmes, relapsing into his armchair and putting
+know, my dear Watson, that you share my love of all that is bizarre and
+your narrative. I ask you not merely because my friend Dr. Watson has
+Sherlock Holmes’ quick eye took in my occupation, and he shook his head
+“How, in the name of good-fortune, did you know all that, Mr. Holmes?”
+“I begin to think, Watson,” said Holmes, “that I make a mistake in
+Holmes chuckled and wriggled in his chair, as was his habit when in
+“Well, it is just as I have been telling you, Mr. Sherlock Holmes,”
+“What is the name of this obliging youth?” asked Sherlock Holmes.
+hard to say his age. I should not wish a smarter assistant, Mr. Holmes;
+“‘Why, what is it, then?’ I asked. You see, Mr. Holmes, I am a very
+“I never hope to see such a sight as that again, Mr. Holmes. From
+“Your experience has been a most entertaining one,” remarked Holmes as
+“My face lengthened at this, Mr. Holmes, for I thought that I was not
+“Now a pawnbroker’s business is mostly done of an evening, Mr. Holmes,
+“This went on day after day, Mr. Holmes, and on Saturday the manager
+Sherlock Holmes and I surveyed this curt announcement and the rueful
+“No, no,” cried Holmes, shoving him back into the chair from which he
+“I started off, Mr. Holmes, but when I got to that address it was a
+“And what did you do then?” asked Holmes.
+Mr. Holmes. I did not wish to lose such a place without a struggle, so,
+“And you did very wisely,” said Holmes. “Your case is an exceedingly
+“As far as you are personally concerned,” remarked Holmes, “I do not
+Holmes sat up in his chair in considerable excitement. “I thought as
+“Hum!” said Holmes, sinking back in deep thought. “He is still with
+“Well, Watson,” said Holmes when our visitor had left us, “what do you
+“As a rule,” said Holmes, “the more bizarre a thing is the less
+“What do you think, Watson? Could your patients spare you for a few
+Holmes stopped in front of it with his head on one side and looked it
+“Thank you,” said Holmes, “I only wished to ask you how you would go
+“Smart fellow, that,” observed Holmes as we walked away. “He is, in my
+“Let me see,” said Holmes, standing at the corner and glancing along
+of Holmes the sleuth-hound, Holmes the relentless, keen-witted,
+Holmes. Here I had heard what he had heard, I had seen what he had
+Where were we going, and what were we to do? I had the hint from Holmes
+the sound of voices from above. On entering his room, I found Holmes in
+“Ha! Our party is complete,” said Holmes, buttoning up his pea-jacket
+and taking his heavy hunting crop from the rack. “Watson, I think you
+“You may place considerable confidence in Mr. Holmes, sir,” said the
+“I think you will find,” said Sherlock Holmes, “that you will play for
+Watson and I will follow in the second.”
+Sherlock Holmes was not very communicative during the long drive and
+“You are not very vulnerable from above,” Holmes remarked as he held up
+“I must really ask you to be a little more quiet!” said Holmes
+injured expression upon his face, while Holmes fell upon his knees upon
+“Which were very well justified,” observed Holmes. “And now it is time
+fire, Watson, have no compunction about shooting them down.”
+which I crouched. Holmes shot the slide across the front of his lantern
+“They have but one retreat,” whispered Holmes. “That is back through
+Sherlock Holmes had sprung out and seized the intruder by the collar.
+revolver, but Holmes’ hunting crop came down on the man’s wrist, and
+“It’s no use, John Clay,” said Holmes blandly. “You have no chance at
+“There are three men waiting for him at the door,” said Holmes.
+“And I you,” Holmes answered. “Your red-headed idea was very new and
+“Really, Mr. Holmes,” said Mr. Merryweather as we followed them from
+Clay,” said Holmes. “I have been at some small expense over this
+“You see, Watson,” he explained in the early hours of the morning as we
+“My dear fellow,” said Sherlock Holmes as we sat on either side of the
+realistic effect,” remarked Holmes. “This is wanting in the police
+Holmes, taking the paper and glancing his eye down it. “This is the
+“I have seen those symptoms before,” said Holmes, throwing his
+pilot boat. Sherlock Holmes welcomed her with the easy courtesy for
+me, Mr. Holmes,” she cried, “else how could you know all that?”
+“Never mind,” said Holmes, laughing; “it is my business to know things.
+for dead. Oh, Mr. Holmes, I wish you would do as much for me. I’m not
+Holmes, with his finger-tips together and his eyes to the ceiling.
+“Your father,” said Holmes, “your stepfather, surely, since the name is
+“Oh, yes, mother is alive and well. I wasn’t best pleased, Mr. Holmes,
+I had expected to see Sherlock Holmes impatient under this rambling and
+“You interest me extremely,” said Holmes. “And since you draw so large
+“I could do with much less than that, Mr. Holmes, but you understand
+“You have made your position very clear to me,” said Holmes. “This is
+my friend, Dr. Watson, before whom you can speak as freely as before
+“I suppose,” said Holmes, “that when Mr. Windibank came back from
+Holmes, I met him twice for walks, but after that father came back
+“Oh, yes, Mr. Holmes. We were engaged after the first walk that we
+“That’s the worst of it, Mr. Holmes, I don’t know.”
+will just show you how fond he was of me, Mr. Holmes, and the little
+“It was most suggestive,” said Holmes. “It has long been an axiom of
+“He was a very shy man, Mr. Holmes. He would rather walk with me in the
+didn’t quite like that, Mr. Holmes. It seemed funny that I should ask
+eyes. That was last Friday, Mr. Holmes, and I have never seen or heard
+Holmes.
+“I shall glance into the case for you,” said Holmes, rising, “and I
+“You are very kind, Mr. Holmes, but I cannot do that. I shall be true
+Sherlock Holmes sat silent for a few minutes with his fingertips still
+“Not invisible but unnoticed, Watson. You did not know where to look,
+Sherlock Holmes clapped his hands softly together and chuckled.
+“’Pon my word, Watson, you are coming along wonderfully. You have
+rather elementary, but I must go back to business, Watson. Would you
+“That will do,” said Holmes. “As to the letters,” he continued,
+the little mystery. I found Sherlock Holmes alone, however, half
+The question was hardly out of my mouth, and Holmes had not yet opened
+“This is the girl’s stepfather, Mr. James Windibank,” said Holmes. “He
+“Good-evening, Mr. James Windibank,” said Holmes. “I think that this
+“On the contrary,” said Holmes quietly; “I have every reason to believe
+“It is a curious thing,” remarked Holmes, “that a typewriter has really
+Holmes with his bright little eyes.
+Windibank,” Holmes continued. “I think of writing another little
+waste time over this sort of fantastic talk, Mr. Holmes,” he said. “If
+“Certainly,” said Holmes, stepping over and turning the key in the
+“Oh, it won’t do—really it won’t,” said Holmes suavely. “There is no
+breast, like one who is utterly crushed. Holmes stuck his feet up on
+Our visitor had recovered something of his assurance while Holmes had
+“It may be so, or it may not, Mr. Holmes,” said he, “but if you are so
+“The law cannot, as you say, touch you,” said Holmes, unlocking and
+“There’s a cold-blooded scoundrel!” said Holmes, laughing, as he threw
+brought in a telegram. It was from Sherlock Holmes and ran in this way:
+are always so interested in Mr. Sherlock Holmes’ cases.”
+valise, rattling away to Paddington Station. Sherlock Holmes was pacing
+“It is really very good of you to come, Watson,” said he. “It makes a
+which Holmes had brought with him. Among these he rummaged and read,
+“Circumstantial evidence is a very tricky thing,” answered Holmes
+“On the contrary,” said Holmes, “it is the brightest rift which I can
+Holmes laughed softly to himself and stretched himself out upon the
+“It was very nice and complimentary of you,” Holmes answered. “It is
+“Oh, Mr. Sherlock Holmes!” she cried, glancing from one to the other of
+“I hope we may clear him, Miss Turner,” said Sherlock Holmes. “You may
+“In what way?” asked Holmes.
+“And your father?” asked Holmes. “Was he in favour of such a union?”
+it.” A quick blush passed over her fresh young face as Holmes shot one
+to the prison to see James. Oh, if you do, Mr. Holmes, do tell him that
+“I am ashamed of you, Holmes,” said Lestrade with dignity after a few
+“I think that I see my way to clearing James McCarthy,” said Holmes.
+“Then let us do so. Watson, I fear that you will find it very slow, but
+blow fell. Still, it might be worth while to call Holmes’ attention to
+opinion, and yet I had so much faith in Sherlock Holmes’ insight that I
+It was late before Sherlock Holmes returned. He came back alone, for
+There was no rain, as Holmes had foretold, and the morning broke bright
+“An elderly man, I presume?” said Holmes.
+“Indeed! That is interesting,” said Holmes.
+winking at me. “I find it hard enough to tackle facts, Holmes, without
+“You are right,” said Holmes demurely; “you do find it very hard to
+“Well, moonshine is a brighter thing than fog,” said Holmes, laughing.
+heavy upon it. We called at the door, when the maid, at Holmes’
+different points, Holmes desired to be led to the court-yard, from
+Sherlock Holmes was transformed when he was hot upon such a scent as
+amid the short grass which bounded it on either side. Sometimes Holmes
+the fall of the stricken man. To Holmes, as I could see by his eager
+shadow of a great beech, the largest tree in the neighbourhood. Holmes
+Ross, Holmes still carrying with him the stone which he had picked up
+“_Nous verrons_,” answered Holmes calmly. “You work your own method,
+“All right,” said Holmes quietly. “I have given you the chance. Here
+found lunch upon the table. Holmes was silent and buried in thought
+“Look here, Watson,” he said when the cloth was cleared “just sit down
+Sherlock Holmes took a folded paper from his pocket and flattened it
+“Holmes,” I said, “you have drawn a net round this man from which he
+“Pray sit down on the sofa,” said Holmes gently. “You had my note?”
+“Yes,” said Holmes, answering the look rather than the words. “It is
+“I am glad to hear you say so,” said Holmes gravely.
+“It may not come to that,” said Holmes.
+Holmes rose and sat down at the table with his pen in his hand and a
+jot down the facts. You will sign it, and Watson here can witness it.
+foul tongue. I did it, Mr. Holmes. I would do it again. Deeply as I
+“Well, it is not for me to judge you,” said Holmes as the old man
+“God help us!” said Holmes after a long silence. “Why does fate play
+the grace of God, goes Sherlock Holmes.’”
+of objections which had been drawn out by Holmes and submitted to the
+When I glance over my notes and records of the Sherlock Holmes cases
+remembered, Sherlock Holmes was able, by winding up the dead man’s
+child in the chimney. Sherlock Holmes sat moodily at one side of the
+Sherlock Holmes was wrong in his conjecture, however, for there came a
+“Give me your coat and umbrella,” said Holmes. “They may rest here on
+“I have heard of you, Mr. Holmes. I heard from Major Prendergast how
+“You fill me with interest,” said Holmes. “Pray give us the essential
+“Well, to come to an end of the matter, Mr. Holmes, and not to abuse
+“One moment,” Holmes interposed, “your statement is, I foresee, one of
+“What have you done?” asked Holmes.
+“Tut! tut!” cried Sherlock Holmes. “You must act, man, or you are lost.
+Holmes shook his clenched hands in the air. “Incredible imbecility!” he
+Again Holmes raved in the air.
+Holmes moved the lamp, and we both bent over the sheet of paper, which
+“Thank you!” said Holmes, folding up the paper and returning it to our
+Sherlock Holmes sat for some time in silence, with his head sunk
+“I think, Watson,” he remarked at last, “that of all our cases we have
+Sherlock Holmes closed his eyes and placed his elbows upon the arms of
+Holmes grinned at the last item. “Well,” he said, “I say now, as I said
+“Have you never—” said Sherlock Holmes, bending forward and sinking his
+Holmes turned over the leaves of the book upon his knee. “Here it is,”
+“You will observe,” said Holmes, laying down the volume, “that the
+Sherlock Holmes was already at breakfast when I came down.
+“Holmes,” I cried, “you are too late.”
+We sat in silence for some minutes, Holmes more depressed and shaken
+“That hurts my pride, Watson,” he said at last. “It is a petty feeling,
+night, for their purpose. Well, Watson, we shall see who will win in
+evening before I returned to Baker Street. Sherlock Holmes had not come
+remain unavenged. Why, Watson, let us put their own devilish trade-mark
+“My God! It’s Watson,” said he. He was in a pitiable state of reaction,
+with every nerve in a twitter. “I say, Watson, what o’clock is it?”
+“So I am. But you’ve got mixed, Watson, for I have only been here a few
+Watson. I am all off colour. I can do nothing for myself.”
+surprise, was none other than Sherlock Holmes. He made a slight motion
+“Holmes!” I whispered, “what on earth are you doing in this den?”
+It was difficult to refuse any of Sherlock Holmes’ requests, for they
+was walking down the street with Sherlock Holmes. For two streets he
+“I suppose, Watson,” said he, “that you imagine that I have added
+Briefly, Watson, I am in the midst of a very remarkable inquiry, and I
+“Ay, bodies, Watson. We should be rich men if we had £ 1000 for every
+“Now, Watson,” said Holmes, as a tall dog-cart dashed up through the
+of the clouds. Holmes drove in silence, with his head sunk upon his
+“You have a grand gift of silence, Watson,” said he. “It makes you
+Watson, and maybe you can see a spark where all is dark to me.”
+medical experience would tell you, Watson, that weakness in one limb is
+While Sherlock Holmes had been detailing this singular series of
+colleague. I hate to meet her, Watson, when I have no news of her
+down, I followed Holmes up the small, winding gravel-drive which led to
+“This is my friend, Dr. Watson. He has been of most vital use to me in
+“Now, Mr. Sherlock Holmes,” said the lady as we entered a well-lit
+Sherlock Holmes seemed to be embarrassed by the question. “Frankly,
+“Then perhaps, Mr. Holmes, you will be good enough to explain how it is
+Sherlock Holmes sprang out of his chair as if he had been galvanised.
+“Coarse writing,” murmured Holmes. “Surely this is not your husband’s
+“But he must be alive, Mr. Holmes.”
+“Oh, you must not discourage me, Mr. Holmes. I know that all is well
+my night of adventure. Sherlock Holmes was a man, however, who, when he
+“Awake, Watson?” he asked.
+when Holmes returned with the news that the boy was putting in the
+boots. “I think, Watson, that you are now standing in the presence of
+“It has been in some points a singular case,” said Holmes, flicking the
+ourselves in Bow Street. Sherlock Holmes was well known to the force,
+“Who is on duty?” asked Holmes.
+“Certainly, Mr. Holmes. Step into my room here.”
+“What can I do for you, Mr. Holmes?”
+“He certainly needs a wash,” remarked Holmes. “I had an idea that he
+turned, and then settled down once more into a deep slumber. Holmes
+“No crime, but a very great error has been committed,” said Holmes.
+Sherlock Holmes sat down beside him on the couch and patted him kindly
+“That note only reached her yesterday,” said Holmes.
+“That was it,” said Holmes, nodding approvingly; “I have no doubt of
+Mr. Holmes, that we are very much indebted to you for having cleared
+consuming an ounce of shag. I think, Watson, that if we drive to Baker
+I had called upon my friend Sherlock Holmes upon the second morning
+“No, no. No crime,” said Sherlock Holmes, laughing. “Only one of those
+was a good deal discoloured. There was no maker’s name; but, as Holmes
+“On the contrary, Watson, you can see everything. You fail, however, to
+“My dear Holmes!”
+“You are certainly joking, Holmes.”
+For answer Holmes clapped the hat upon his head. It came right over the
+Sherlock Holmes laughed. “Here is the foresight,” said he putting his
+Watson, with a week’s accumulation of dust upon your hat, and when your
+Sherlock Holmes had opened his mouth to reply, when the door flew open,
+“The goose, Mr. Holmes! The goose, sir!” he gasped.
+the kitchen window?” Holmes twisted himself round upon the sofa to get
+Sherlock Holmes sat up with a whistle. “By Jove, Peterson!” said he,
+“Hum! So much for the police-court,” said Holmes thoughtfully, tossing
+goose in Tottenham Court Road at the other. You see, Watson, our little
+When the commissionaire had gone, Holmes took up the stone and held it
+and we were shown up together to Holmes’ room.
+summer than for winter. Ah, Watson, you have just come at the right
+hand, recalled Holmes’ surmise as to his habits. His rusty black
+“We have retained these things for some days,” said Holmes, “because we
+Sherlock Holmes glanced sharply across at me with a slight shrug of his
+“So much for Mr. Henry Baker,” said Holmes when he had closed the door
+the matter. Are you hungry, Watson?”
+Holborn. Holmes pushed open the door of the private bar and ordered two
+came out into the frosty air. “Remember, Watson that though we have so
+“Good-evening. It’s a cold night,” said Holmes.
+“Sold out of geese, I see,” continued Holmes, pointing at the bare
+inquiries,” said Holmes carelessly. “If you won’t tell us the bet is
+“Mrs. Oakshott, 117, Brixton Road—249,” read Holmes.
+Holmes turned to the page indicated. “Here you are, ‘Mrs. Oakshott,
+Sherlock Holmes looked deeply chagrined. He drew a sovereign from his
+by the idea that he was doing me on a wager. Well, Watson, we are, I
+“Ha! this may save us a visit to Brixton Road,” whispered Holmes. “Come
+“You will excuse me,” said Holmes blandly, “but I could not help
+“My name is Sherlock Holmes. It is my business to know what other
+Sherlock Holmes hailed a four-wheeler which was passing. “In that case
+“No, no; the real name,” said Holmes sweetly. “It is always awkward
+“Here we are!” said Holmes cheerily as we filed into the room. “The
+right hand. Holmes unlocked his strong-box and held up the blue
+“The game’s up, Ryder,” said Holmes quietly. “Hold up, man, or you’ll
+be into the fire! Give him an arm back into his chair, Watson. He’s not
+“Get back into your chair!” said Holmes sternly. “It is very well to
+“I will fly, Mr. Holmes. I will leave the country, sir. Then the charge
+“Well, I did what she said, Mr. Holmes, and I carried the bird all the
+measured tapping of Sherlock Holmes’ finger-tips upon the edge of the
+“After all, Watson,” said Holmes, reaching up his hand for his clay
+Holmes, I find many tragic, some comic, a large number merely strange,
+Holmes, when we were sharing rooms as bachelors in Baker Street. It is
+Sherlock Holmes standing, fully dressed, by the side of my bed. He was
+“Very sorry to knock you up, Watson,” said he, “but it’s the common lot
+I had no keener pleasure than in following Holmes in his professional
+“Good-morning, madam,” said Holmes cheerily. “My name is Sherlock
+Holmes. This is my intimate friend and associate, Dr. Watson, before
+“It is fear, Mr. Holmes. It is terror.” She raised her veil as she
+expression was weary and haggard. Sherlock Holmes ran her over with one
+aid. I have heard of you, Mr. Holmes; I have heard of you from Mrs.
+Holmes turned to his desk and, unlocking it, drew out a small
+an opal tiara. I think it was before your time, Watson. I can only say,
+answers and averted eyes. But I have heard, Mr. Holmes, that you can
+Holmes nodded his head. “The name is familiar to me,” said he.
+Sherlock Holmes had been leaning back in his chair with his eyes closed
+“Indeed,” said Holmes. “Was it your custom always to lock yourselves in
+“One moment,” said Holmes, “are you sure about this whistle and
+Holmes shook his head like a man who is far from being satisfied.
+For answer Holmes pushed back the frill of black lace which fringed the
+“You have been cruelly used,” said Holmes.
+There was a long silence, during which Holmes leaned his chin upon his
+“Excellent. You are not averse to this trip, Watson?”
+“And what do you think of it all, Watson?” asked Sherlock Holmes,
+“Which of you is Holmes?” asked this apparition.
+“Indeed, Doctor,” said Holmes blandly. “Pray take a seat.”
+“It is a little cold for the time of the year,” said Holmes.
+have heard of you before. You are Holmes, the meddler.”
+“Holmes, the busybody!”
+“Holmes, the Scotland Yard Jack-in-office!”
+Holmes chuckled heartily. “Your conversation is most entertaining,”
+“He seems a very amiable person,” said Holmes, laughing. “I am not
+her imprudence in allowing this brute to trace her. And now, Watson, we
+It was nearly one o’clock when Sherlock Holmes returned from his
+of anything of the sort. And now, Watson, this is too serious for
+“There is some building going on there,” said Holmes; “that is where we
+“And the lady, I fancy, is Miss Stoner,” observed Holmes, shading his
+“I thought it as well,” said Holmes as we climbed the stile, “that this
+Holmes, and in a few words he sketched out what had occurred. Miss
+there were no signs of any workmen at the moment of our visit. Holmes
+Miss Stoner did so, and Holmes, after a careful examination through the
+three bedrooms opened. Holmes refused to examine the third chamber, so
+the house. Holmes drew one of the chairs into a corner and sat silent,
+“Very strange!” muttered Holmes, pulling at the rope. “There are one or
+“Done about the same time as the bell-rope?” remarked Holmes.
+Holmes walked slowly round and examined each and all of them with the
+“What do you make of that, Watson?”
+“I believe, Mr. Holmes, that you have already made up your mind,” said
+Sherlock Holmes and I had no difficulty in engaging a bedroom and
+“Do you know, Watson,” said Holmes as we sat together in the gathering
+“My dear Holmes!”
+“Holmes,” I cried, “I seem to see dimly what you are hinting at. We are
+even deeper, but I think, Watson, that we shall be able to strike
+“That is our signal,” said Holmes, springing to his feet; “it comes
+Holmes was for the moment as startled as I. His hand closed like a vice
+Holmes’ example and slipping off my shoes, I found myself inside the
+Holmes had brought up a long thin cane, and this he placed upon the bed
+Holmes sprang from the bed, struck a match, and lashed furiously with
+“You see it, Watson?” he yelled. “You see it?”
+But I saw nothing. At the moment when Holmes struck the light I heard a
+gazing at Holmes, and he at me, until the last echoes of it had died
+“It means that it is all over,” Holmes answered. “And perhaps, after
+“The band! the speckled band!” whispered Holmes.
+“It is a swamp adder!” cried Holmes; “the deadliest snake in India. He
+to learn of the case was told me by Sherlock Holmes as we travelled
+shows, my dear Watson, how dangerous it always is to reason from
+Sherlock Holmes, for solution during the years of our intimacy, there
+civil practice and had finally abandoned Holmes in his Baker Street
+friend, Mr. Sherlock Holmes, before you go to the official police.”
+Sherlock Holmes was, as I expected, lounging about his sitting-room in
+Holmes sat in his big armchair with the weary, heavy-lidded expression
+“One horse?” interjected Holmes.
+extraordinary narrative. Then Sherlock Holmes pulled down from the
+Holmes, the hydraulic engineer, Inspector Bradstreet, of Scotland Yard,
+“I think I could lay my finger on it,” said Holmes quietly.
+“None at all,” said Holmes. “They are coiners on a large scale, and
+“Well, at least,” said Holmes, “you have had your revenge upon them.
+And Holmes’ fears came to be realised, for from that day to this no
+fugitives disappeared, and even Holmes’ ingenuity failed ever to
+“Experience,” said Holmes, laughing. “Indirectly it may be of value,
+friend Sherlock Holmes had a considerable share in clearing the matter
+still sharing rooms with Holmes in Baker Street, that he came home from
+“I assure you, Watson, without affectation, that the status of my
+side of his right little finger,” remarked Holmes as he folded up the
+in all this. I think that I must turn to you Watson, for something more
+“Terse and to the point,” remarked Holmes, stretching his long, thin
+“Anything else?” asked Holmes, yawning.
+“Before the what?” asked Holmes with a start.
+missed it for worlds. But there is a ring at the bell, Watson, and as
+will prove to be our noble client. Do not dream of going, Watson, for I
+“Good-day, Lord St. Simon,” said Holmes, rising and bowing. “Pray take
+the basket-chair. This is my friend and colleague, Dr. Watson. Draw up
+Holmes. I have been cut to the quick. I understand that you have
+“You can understand,” said Holmes suavely, “that I extend to the
+fire. “You see, Mr. Holmes,” said he, “my wife was twenty before her
+Holmes gazed long and earnestly at it. Then he closed the locket and
+you know what women are, Mr. Holmes. Flora was a dear little thing, but
+“Well, certainly that is also a conceivable hypothesis,” said Holmes,
+level with his own,” said Sherlock Holmes, laughing. “I think that I
+“My dear Holmes!”
+“What’s up, then?” asked Holmes with a twinkle in his eye. “You look
+“And very wet it seems to have made you,” said Holmes laying his hand
+Sherlock Holmes leaned back in his chair and laughed heartily.
+a little nut for you to crack, Master Holmes.”
+afraid, Holmes, that you are not very practical with your deductions
+“Very good, Lestrade,” said Holmes, laughing. “You really are very fine
+Mr. Holmes, and we shall see which gets to the bottom of the matter
+“Just one hint to you, Lestrade,” drawled Holmes before his rival
+He had hardly shut the door behind him when Holmes rose to put on his
+work,” he remarked, “so I think, Watson, that I must leave you to your
+It was after five o’clock when Sherlock Holmes left me, but I had no
+Just before nine o’clock Sherlock Holmes stepped briskly into the room.
+“My messenger reached you, then?” asked Holmes.
+“I think that I heard a ring,” said Holmes. “Yes, there are steps on
+gentleman, Mr. Holmes, came round to us this evening, though how he
+“I had hoped,” suggested Holmes, “that you would have joined us in a
+Sherlock Holmes. “It is always a joy to meet an American, Mr. Moulton,
+“The case has been an interesting one,” remarked Holmes when our
+“Ah, Watson,” said Holmes, smiling, “perhaps you would not be very
+“Holmes,” said I as I stood one morning in our bow-window looking down
+“I believe that he is coming here,” said Holmes, rubbing his hands.
+to the centre of the room. Sherlock Holmes pushed him down into the
+“I see that you have had some great trouble,” responded Holmes.
+“Pray compose yourself, sir,” said Holmes, “and let me have a clear
+“And now a word as to my household, Mr. Holmes, for I wish you to
+Arthur. He has been a disappointment to me, Mr. Holmes—a grievous
+“Now, Mr. Holmes, you know the people who live under my roof, and I
+“I am endeavouring to tell you everything, Mr. Holmes, which may have
+Sherlock Holmes sat silent for some few minutes, with his brows knitted
+“Now, my dear sir,” said Holmes, “is it not obvious to you now that
+“It is our task to find that out,” replied Holmes; “so now, if you
+unhappy father, but still I had such faith in Holmes’ judgment that I
+all, being a public, though little used, thoroughfare. Holmes left us
+it,” returned Holmes, going back to the mat to knock the snow from his
+“He stood,” said Holmes, “to the left of the door—that is to say,
+She smiled, but there was no answering smile in Holmes’ thin, eager
+a grey carpet, a large bureau, and a long mirror. Holmes went to the
+Sherlock Holmes took it up and opened the bureau.
+“Now, Mr. Holder,” said Holmes, “here is the corner which corresponds
+“Then I will.” Holmes suddenly bent his strength upon it, but without
+“But the gems, Mr. Holmes. Where are they?”
+the fireplace. “I only wish that you could come with me, Watson, but I
+“You will excuse my beginning without you, Watson,” said he, “but you
+“What could she mean by that note, Mr. Holmes? Do you think it points
+“Ha! You say so! You have heard something, Mr. Holmes; you have learned
+With a dazed face the banker made out the required check. Holmes walked
+“There is one other thing you owe, Mr. Holder,” said Sherlock Holmes
+“When I arrived at the house,” continued Holmes, “I at once went very
+“I think that we may safely say,” returned Holmes, “that she is
+“To the man who loves art for its own sake,” remarked Sherlock Holmes,
+Watson, that you have so far grasped this truth that in these little
+Sherlock Holmes had been silent all the morning, dipping continuously
+I could see that Holmes was favourably impressed by the manner and
+“You may imagine, Mr. Holmes, that to me, destitute as I was, such an
+“I could hardly believe my ears. As you may observe, Mr. Holmes, my
+“Well, Mr. Holmes, when I got back to my lodgings and found little
+“That is the letter which I have just received, Mr. Holmes, and my mind
+question,” said Holmes, smiling.
+“What is the meaning of it all, Mr. Holmes?”
+“But the money, Mr. Holmes, the money!”
+Holmes shook his head gravely. “It would cease to be a danger if we
+words to Holmes she bade us both good-night and bustled off upon her
+“And she would need to be,” said Holmes gravely. “I am much mistaken if
+determine. As to Holmes, I observed that he sat frequently for half an
+was thinking of turning in and Holmes was settling down to one of those
+“Will you come with me?” asked Holmes, glancing up.
+English capital. Holmes had been buried in the morning papers all the
+But Holmes shook his head gravely.
+“Do you know, Watson,” said he, “that it is one of the curses of a mind
+“They always fill me with a certain horror. It is my belief, Watson,
+“Let us have everything in its due order.” Holmes thrust his long thin
+truth, Mr. Holmes, in the conjecture which seemed to us to be probable
+creature, Mr. Holmes, and, indeed, he has little to do with my story.”
+“You can easily imagine, Mr. Holmes, how curious I became as to what
+“Pray continue,” said Holmes. “Your narrative promises to be a most
+“I am naturally observant, as you may have remarked, Mr. Holmes, and I
+“Well, Mr. Holmes, from the moment that I understood that there was
+sight, Mr. Holmes. My overstrung nerves failed me suddenly, and I
+Mr. Holmes. I could not live there longer without some advice. I was
+all my adventures, Mr. Holmes, and I should be very glad if you could
+Holmes and I had listened spellbound to this extraordinary story. My
+“My dear Watson, you as a medical man are continually gaining light as
+“I am sure that you are right, Mr. Holmes,” cried our client. “A
+“Have you managed it?” asked Holmes.
+“You have done well indeed!” cried Holmes with enthusiasm. “Now lead
+described. Holmes cut the cord and removed the transverse bar. Then he
+from within, and at the silence Holmes’ face clouded over.
+that we had better go in without you. Now, Watson, put your shoulder to
+“There has been some villainy here,” said Holmes; “this beauty has
+whose step I hear now upon the stair. I think, Watson, that it would be
+him, but Sherlock Holmes sprang forward and confronted him.
+“Better close the front door,” cried Holmes, and we all rushed down the
+Holmes and I rushed out and round the angle of the house, with Toller
+“Ha!” said Holmes, looking keenly at her. “It is clear that Mrs. Toller
+“Ah,” said Holmes, “I think that what you have been good enough to tell
+“I am sure we owe you an apology, Mrs. Toller,” said Holmes, “for you
+the country surgeon and Mrs. Rucastle, so I think, Watson, that we had
+Hunter, my friend Holmes, rather to my disappointment, manifested no
+```
+
+2.  All five-letter words in the file.
+```bash
+grep -Eo "\<[A-Za-z]{5}\>" holmes.txt
+short
+point
+child
+light
+shall
+train
+Yours
+which
+final
+whole
+would
+which
+apply
+there
+seems
+quiet
+taken
+every
+order
+stand
+young
+money
+money
+makes
+could
+their
+There
+would
+carry
+which
+There
+novel
+about
+doubt
+shook
+would
+cease
+could
+night
+would
+bring
+chair
+swept
+shall
+quite
+shall
+write
+night
+start
+words
+night
+least
+heard
+quick
+steps
+seems
+young
+would
+which
+found
+alley
+human
+woman
+light
+quite
+brows
+swept
+cried
+would
+which
+night
+those
+night
+which
+would
+leave
+night
+threw
+brief
+Black
+Hotel
+asked
+There
+train
+clock
+after
+threw
+began
+ideal
+light
+white
+there
+which
+hills
+roofs
+light
+green
+fresh
+cried
+fresh
+Baker
+shook
+these
+their
+which
+comes
+their
+which
+crime
+there
+cried
+would
+crime
+these
+There
+child
+beget
+among
+whole
+close
+going
+there
+crime
+these
+Think
+deeds
+which
+wiser
+never
+miles
+which
+makes
+Still
+clear
+Quite
+seven
+which
+would
+cover
+facts
+which
+these
+fresh
+which
+shall
+doubt
+there
+tower
+shall
+learn
+Black
+there
+found
+young
+lunch
+table
+quick
+three
+leave
+order
+first
+place
+whole
+about
+Their
+their
+shall
+drove
+large
+block
+house
+There
+round
+woods
+three
+sides
+field
+which
+which
+about
+yards
+front
+front
+house
+woods
+round
+clump
+front
+given
+place
+child
+There
+truth
+which
+rooms
+Baker
+found
+faced
+woman
+think
+while
+forty
+their
+about
+seven
+years
+child
+first
+could
+quite
+young
+light
+other
+every
+bluff
+whole
+happy
+woman
+would
+often
+tears
+child
+which
+never
+small
+which
+quite
+large
+whole
+spent
+seems
+shows
+quite
+birds
+would
+about
+story
+shall
+thing
+about
+house
+which
+There
+rough
+smell
+drink
+Twice
+since
+quite
+drunk
+woman
+spend
+which
+other
+after
+quiet
+third
+after
+whims
+shall
+dress
+would
+dress
+which
+found
+shade
+beige
+signs
+could
+which
+quite
+which
+large
+along
+front
+house
+three
+floor
+chair
+close
+asked
+other
+began
+until
+quite
+weary
+sense
+never
+hands
+After
+might
+dress
+later
+under
+Again
+dress
+again
+again
+funny
+which
+which
+novel
+chair
+might
+aloud
+about
+heart
+cease
+dress
+could
+going
+first
+means
+happy
+piece
+glass
+midst
+there
+There
+least
+first
+there
+small
+there
+there
+which
+field
+fixed
+there
+there
+yours
+asked
+these
+parts
+round
+would
+round
+blind
+again
+dress
+there
+prove
+which
+speak
+first
+small
+which
+heard
+sharp
+chain
+sound
+large
+about
+vague
+start
+which
+given
+Carlo
+groom
+loose
+every
+night
+fangs
+night
+worth
+later
+about
+clock
+night
+front
+house
+scene
+aware
+under
+giant
+large
+tawny
+black
+bones
+other
+chill
+heart
+which
+think
+could
+great
+trunk
+after
+child
+began
+amuse
+There
+chest
+upper
+empty
+lower
+first
+linen
+still
+third
+might
+bunch
+tried
+first
+There
+thing
+would
+never
+guess
+thing
+could
+hands
+undid
+trunk
+would
+could
+meant
+wrong
+which
+whole
+house
+There
+which
+which
+faced
+which
+suite
+stair
+which
+round
+anger
+veins
+stood
+round
+which
+could
+house
+There
+three
+which
+dirty
+while
+merry
+think
+young
+quite
+suite
+spare
+rooms
+there
+there
+young
+would
+would
+spoke
+there
+there
+there
+about
+suite
+rooms
+which
+share
+might
+place
+woman
+woman
+which
+there
+these
+rooms
+large
+black
+linen
+drunk
+there
+doubt
+there
+child
+There
+front
+which
+right
+angle
+Round
+three
+doors
+first
+third
+which
+empty
+dusty
+other
+thick
+light
+dimly
+broad
+other
+stout
+there
+could
+there
+which
+light
+above
+stood
+might
+heard
+sound
+steps
+light
+which
+shone
+under
+sight
+skirt
+dress
+young
+young
+think
+young
+voice
+guard
+empty
+eerie
+light
+again
+still
+there
+think
+asked
+think
+there
+still
+known
+again
+smile
+demon
+throw
+until
+found
+lying
+could
+there
+house
+woman
+child
+could
+bring
+would
+might
+house
+fears
+would
+cloak
+which
+about
+house
+doubt
+might
+loose
+drunk
+state
+would
+awake
+night
+leave
+three
+clock
+going
+visit
+after
+child
+could
+means
+above
+story
+paced
+hands
+still
+drunk
+asked
+heard
+could
+night
+there
+acted
+brave
+think
+could
+think
+quite
+woman
+shall
+seven
+clock
+There
+might
+alarm
+could
+would
+shall
+there
+there
+doubt
+Alice
+right
+which
+yours
+doubt
+dress
+happy
+loose
+night
+clear
+point
+child
+earth
+light
+child
+study
+valid
+first
+their
+child
+cruel
+bodes
+their
+power
+right
+cried
+which
+until
+seven
+clock
+shall
+solve
+seven
+house
+group
+trees
+their
+metal
+light
+house
+asked
+noise
+which
+cried
+shall
+black
+stair
+found
+front
+which
+tried
+sound
+trust
+think
+shall
+empty
+There
+small
+table
+linen
+above
+There
+shall
+swung
+cried
+light
+eaves
+there
+whose
+stair
+think
+would
+ready
+words
+mouth
+burly
+heavy
+stick
+sight
+where
+round
+Spies
+power
+serve
+could
+cried
+close
+front
+cried
+heard
+hound
+agony
+sound
+which
+limbs
+cried
+Quick
+quick
+round
+angle
+house
+There
+brute
+black
+while
+white
+teeth
+still
+great
+house
+could
+round
+gaunt
+woman
+cried
+would
+pains
+clear
+knows
+about
+ready
+there
+which
+still
+clear
+could
+there
+court
+stood
+Alice
+never
+happy
+Alice
+again
+never
+until
+after
+house
+could
+learn
+Alice
+quiet
+never
+about
+hands
+there
+would
+would
+paper
+could
+money
+until
+brain
+fever
+weeks
+death
+young
+stuck
+could
+think
+makes
+clear
+order
+being
+house
+drink
+ready
+which
+comes
+think
+seems
+house
+front
+alive
+still
+their
+finds
+after
+their
+where
+EBOOK
+works
+print
+means
+these
+works
+rules
+forth
+Terms
+apply
+works
+eBook
+terms
+eBook
+eBook
+works
+given
+START
+works
+using
+other
+agree
+terms
+Terms
+works
+using
+agree
+terms
+agree
+abide
+terms
+cease
+using
+works
+agree
+bound
+terms
+forth
+agree
+bound
+terms
+There
+works
+terms
+below
+There
+works
+terms
+works
+below
+PGLAF
+works
+works
+claim
+right
+works
+based
+works
+works
+terms
+terms
+share
+place
+where
+state
+check
+terms
+works
+based
+other
+makes
+other
+links
+other
+which
+which
+eBook
+other
+parts
+world
+under
+terms
+eBook
+check
+where
+using
+eBook
+texts
+forth
+terms
+terms
+works
+found
+terms
+files
+other
+forth
+links
+terms
+other
+Plain
+ASCII
+other
+means
+means
+Plain
+ASCII
+other
+works
+works
+gross
+works
+using
+taxes
+owner
+under
+which
+about
+money
+agree
+terms
+works
+other
+works
+money
+other
+terms
+works
+group
+works
+terms
+forth
+forth
+below
+works
+these
+works
+which
+other
+other
+virus
+codes
+Right
+owner
+other
+party
+under
+costs
+legal
+AGREE
+THOSE
+AGREE
+OWNER
+UNDER
+RIGHT
+money
+elect
+right
+forth
+OTHER
+allow
+types
+forth
+state
+shall
+state
+shall
+agree
+owner
+agent
+works
+works
+costs
+legal
+arise
+which
+cause
+occur
+cause
+about
+works
+walks
+goals
+learn
+about
+about
+under
+state
+state
+Plaza
+Email
+links
+found
+about
+carry
+works
+array
+small
+takes
+these
+where
+state
+visit
+While
+where
+alone
+swamp
+small
+staff
+check
+pages
+other
+visit
+About
+works
+works
+could
+forty
+years
+loose
+often
+which
+paper
+start
+which
+about
+email
+about
+```
+
+3.  All lines that end in a question mark (remember `?` is a special character in regex — you'll need to escape it with `\`).
+```bash
+grep -E "\?$" holmes.txt
+There are no lines that end with a question mark because a quotation mark always follows it.
+```
+
+4.  All instances of a letter repeated twice in a row (like "ee" in "sleep" or "ss" in "glass"), using a backreference.
+```bash
+grep -Eo "([a-zA-Z])\1" holmes.txt
+ea
+dd
+rr
+nc
+ i
+ i
+ d
+tt
+ee
+ll
+ee
+ll
+ss
+tt
+ee
+ss
+ll
+ll
+ll
+tt
+oo
+ee
+ee
+si
+ee
+oo
+o 
+oo
+oo
+tt
+ss
+oo
+ee
+mm
+tt
+ea
+ss
+al
+ll
+rr
+ll
+e 
+ss
+nn
+cc
+ee
+oo
+ll
+oo
+tt
+ee
+ll
+dd
+ss
+pp
+ll
+ll
+ I
+ee
+r 
+ee
+ b
+tt
+gg
+e 
+rr
+ll
+ll
+ll
+oo
+ll
+ss
+ll
+nn
+ee
+tt
+oo
+ a
+ee
+ll
+ u
+pp
+ d
+ee
+tt
+ u
+th
+ll
+nn
+so
+ll
+ll
+cc
+rr
+pp
+ee
+ll
+ll
+oo
+ee
+oo
+oo
+ll
+pp
+ee
+mm
+ll
+oo
+ b
+ee
+oo
+ee
+ss
+ee
+rr
+ee
+ss
+ee
+e 
+ee
+ss
+ll
+ss
+ee
+ss
+tt
+ll
+tt
+ll
+ss
+ff
+ee
+pp
+rr
+ee
+dd
+oo
+tt
+ll
+tt
+ll
+pp
+ee
+ss
+oo
+ee
+nn
+tt
+ee
+tt
+ a
+ll
+ee
+ t
+ss
+pp
+ll
+zz
+ll
+ee
+ee
+ee
+ll
+ss
+oo
+ m
+rr
+pp
+ee
+ t
+ss
+ll
+ss
+pp
+ll
+ee
+ss
+ll
+ll
+oo
+oo
+hi
+ll
+ee
+ee
+tt
+ee
+ss
+oo
+ee
+gg
+oo
+oo
+ee
+oo
+ee
+oo
+ll
+nn
+nn
+oo
+dd
+mm
+ss
+tt
+e 
+ss
+nn
+mm
+ll
+tt
+ll
+gg
+nn
+dd
+dd
+ss
+ a
+ss
+ee
+ee
+ss
+oo
+rr
+ee
+pp
+ss
+cc
+tt
+ee
+ll
+ss
+pp
+ss
+ll
+ee
+oo
+ll
+oo
+rr
+ee
+ i
+ll
+ss
+ o
+ss
+ n
+ot
+ i
+tt
+ w
+ a
+ee
+ss
+ee
+nt
+rr
+ i
+nn
+tt
+ee
+ff
+pp
+ee
+oo
+ll
+oo
+pp
+tt
+ i
+ee
+ o
+dd
+ss
+ b
+ff
+ll
+ll
+ll
+oo
+ee
+oo
+ee
+ll
+oo
+ss
+oo
+ss
+oo
+ n
+pp
+oo
+oo
+oo
+pp
+ee
+oo
+zz
+ss
+ll
+ex
+ll
+ff
+tt
+oo
+rr
+tt
+oo
+pp
+ll
+ll
+ll
+nn
+ee
+oo
+tt
+ss
+ i
+ss
+ss
+ee
+tt
+ss
+ss
+zz
+ll
+tt
+ a
+ll
+oo
+tt
+oo
+pp
+ll
+oo
+ll
+oo
+oo
+ff
+cc
+ee
+ll
+oo
+ss
+oo
+rr
+oo
+ m
+ll
+ee
+ee
+tt
+ll
+ll
+cc
+ll
+oo
+rr
+u 
+ss
+cc
+ss
+tt
+th
+ff
+ee
+oo
+tt
+ a
+ee
+tt
+ i
+bb
+oo
+oo
+nn
+th
+oo
+oo
+ll
+ee
+ee
+oo
+ee
+ee
+oo
+ss
+dd
+oo
+es
+ll
+ll
+oo
+rr
+oo
+ee
+oo
+ll
+pp
+oo
+pp
+as
+ee
+oo
+oo
+ee
+ss
+mm
+oo
+ss
+ee
+ll
+oo
+ll
+rr
+oo
+rr
+tt
+ee
+mm
+oo
+ss
+oo
+ss
+oo
+dd
+oo
+ss
+tt
+oo
+rr
+dd
+ss
+ss
+oo
+th
+oo
+ a
+ m
+nn
+ss
+oo
+nn
+o 
+ee
+ t
+ee
+ll
+ll
+th
+oo
+ee
+ d
+oo
+ a
+ i
+ee
+ss
+ee
+ll
+nn
+ a
+ i
+oo
+ll
+ff
+ s
+rr
+pp
+oo
+ll
+ll
+rr
+ll
+ll
+oo
+ff
+ee
+rr
+pp
+oo
+oo
+ll
+ee
+pp
+ee
+ff
+tt
+ee
+ll
+ll
+oo
+ll
+ll
+ll
+ll
+ll
+oo
+ss
+ h
+e 
+ll
+ i
+ll
+e-
+ll
+ t
+ll
+tt
+ss
+ i
+ b
+pp
+ee
+ll
+ll
+ll
+ll
+ll
+rr
+tt
+mm
+ d
+el
+ll
+oo
+ff
+ee
+ss
+ss
+ee
+ff
+ss
+ll
+ss
+ss
+ss
+ss
+ss
+ss
+pp
+tt
+oo
+mm
+ o
+ a
+ll
+ee
+ll
+ll
+oo
+ a
+oo
+ b
+nn
+ll
+ll
+oo
+pp
+ee
+ee
+tt
+ff
+ss
+ee
+oo
+dd
+ll
+ll
+e 
+ll
+ee
+ll
+oo
+ee
+ss
+ss
+oo
+ll
+ss
+rr
+ss
+cc
+ss
+th
+oo
+ss
+tt
+ll
+ee
+nn
+oo
+oo
+tt
+ll
+ll
+ss
+ss
+rr
+ff
+h 
+ll
+oo
+ee
+oo
+dd
+t 
+ss
+ss
+dd
+th
+ll
+pp
+oo
+oo
+ss
+ll
+ i
+ll
+tt
+ m
+et
+oo
+ll
+ll
+rr
+rr
+gg
+oo
+ h
+oo
+ee
+ll
+oo
+ll
+rr
+zz
+nn
+ll
+ee
+ee
+ll
+ee
+rr
+rr
+oo
+ll
+ll
+ss
+oo
+ll
+oo
+e 
+ss
+nn
+ a
+ll
+tt
+ a
+ll
+ u
+ss
+ll
+ i
+ll
+ss
+ll
+oo
+ss
+oo
+ a
+ss
+rr
+ll
+ll
+ss
+ll
+ll
+rr
+rr
+ee
+oo
+tt
+ll
+ff
+th
+ee
+oo
+ll
+tt
+ll
+oo
+on
+ee
+er
+oo
+cc
+ee
+ll
+ll
+ i
+oo
+dd
+ a
+pp
+ a
+ll
+zz
+ss
+ee
+pp
+ee
+oo
+ll
+ff
+ss
+rr
+pp
+ss
+pp
+oo
+ll
+cc
+ss
+OO
+ll
+ll
+ss
+pp
+oo
+ll
+oo
+oo
+oo
+ll
+oo
+ll
+mm
+LL
+LL
+ss
+ee
+ss
+ee
+ll
+ll
+ww
+ee
+cc
+ll
+ll
+ee
+ee
+ll
+ee
+ll
+ss
+ss
+ee
+cc
+ss
+ee
+ee
+ee
+ss
+ee
+ee
+ll
+ee
+ee
+ll
+ee
+ee
+cc
+ss
+ee
+ll
+ll
+ll
+ll
+ll
+pp
+ss
+ee
+cc
+ss
+ee
+ee
+ee
+ss
+ee
+ee
+tt
+ll
+dd
+ee
+ss
+ll
+ll
+mm
+cc
+ss
+ll
+pp
+pp
+ss
+cc
+ss
+oo
+oo
+ww
+ll
+oo
+ss
+ee
+cc
+ss
+ss
+pp
+ss
+ss
+dd
+dd
+ll
+ll
+ss
+nn
+ll
+ss
+mm
+cc
+ss
+ll
+ss
+ss
+cc
+ss
+ll
+II
+ o
+ff
+ff
+ww
+dd
+ee
+ll
+II
+ o
+ll
+ee
+cc
+ss
+ss
+ee
+cc
+ss
+ee
+ss
+pp
+ee
+ee
+ll
+ll
+dd
+ss
+ll
+ee
+ll
+ll
+ss
+ss
+ll
+ll
+cc
+ss
+cc
+ll
+ll
+ee
+ee
+ee
+ff
+ee
+ss
+ee
+ee
+ff
+oo
+ll
+ff
+cc
+rr
+rr
+ll
+nn
+RR
+ee
+ll
+ee
+EE
+RR
+EE
+EE
+LL
+SS
+tt
+tt
+ll
+oo
+pp
+ll
+pp
+RR
+SS
+RR
+SS
+ll
+rr
+ee
+pp
+ee
+ee
+ll
+tt
+pp
+ee
+ll
+ee
+ee
+cc
+ee
+ee
+ss
+ss
+ll
+ee
+ll
+cc
+dd
+ss
+ee
+dd
+ff
+ee
+ll
+ee
+pp
+ee
+ss
+ee
+ll
+ll
+ee
+ff
+ee
+ww
+ss
+ss
+pp
+ll
+tt
+ss
+ff
+ff
+ww
+nn
+pp
+rr
+ss
+ee
+cc
+ss
+rr
+ll
+mm
+tt
+ll
+ff
+ee
+ee
+ee
+tt
+ww
+nn
+cc
+pp
+ff
+ll
+cc
+nn
+ll
+ff
+rr
+dd
+ss
+cc
+ww
+ss
+ee
+oo
+oo
+ee
+pp
+oo
+ll
+ss
+ss
+ee
+oo
+ww
+oo
+tt
+oo
+```
+
+
+5.  The total number of times "he" or "He" or "she" or "She" appears as its own word (not buried inside a longer word like "the" or "shelf").
+```bash
+grep -Ec "( he | He | she | She )" holmes.txt
+1340
+```
+
+------------------------------------------------------------------------
+
+## Part 4 — Reflection
+
+At the bottom of your document, write a short (3–5 sentence) reflection:
+
+-   What was the easiest part of this assignment? What was the hardest?
+-   Now that you've used `grep` and regex on an English text, can you think of a linguistic question (phonological, morphological, syntactic) you could investigate this way on a text or corpus?
+```bash
+The easiest part of this assignment was counting and searching for words in the text. The hardest part was writing the script. I could use grep and regex to search for all words in a given language that contain a certain prefix or suffix. For example, I could search for all words that contain a specific gendered prefix or suffix.
+```
+
+------------------------------------------------------------------------
+
+## Submission
+
+Your `LIN_301` repo is public, so instead of uploading a file to Canvas, you'll submit a **link** straight to your `homework/hw1` folder on GitHub — that one folder holds everything (your `.qmd` write-up and all your working files), so a single link is all a grader needs. No rendering required, since this homework is just documented commands and written answers (nothing gets computed, so there's no output a render would add).
+
+1.  **Push everything.** Stage, commit, and push your entire `homework/hw1` folder — your `.qmd` file, `holmes.txt`, `setup.sh`, and the `notes` folder structure — to your `LIN_301` GitHub repo — same stage → commit → push you've been doing all along.
+
+2.  **Get the folder's GitHub address.** On github.com, navigate into your repo to `homework/hw1`, and copy the URL from your browser's address bar. It'll look like:
+
+    ```         
+    https://github.com/your-username/LIN_301/tree/main/homework/hw1
+    ```
+
+3.  **Submit that link on Canvas** — no file upload needed.
+
+4.  Be sure to replace "lastname_firstname" with your actual last name and first name in your `.qmd` filename.
+
+------------------------------------------------------------------------
+
+## Grading Rubric (100 pts total)
+
+### Part 1 — Navigating & Managing Files (40 pts)
+
+| Criteria | Points |
+|-----------------------------------------|:-----------------------------:|
+| `hw1` folder created; `holmes.txt` downloaded correctly via `curl` | 7 |
+| Nested folder structure (`notes` \> `working` \> `final`) created correctly | 7 |
+| `log.txt` created with `touch` and moved into `final` | 6 |
+| `drafts` successfully renamed to `notes` using `mv` | 4 |
+| `scratch` folder created and removed with `rm -r` | 4 |
+| `setup.sh` script written correctly and runs successfully with `source` | 10 |
+| Answer to `rmdir` vs. `rm -r` question is accurate | 2 |
+
+### Part 2 — Counting & Searching (20 pts)
+
+| Criteria | Points |
+|-----------------------------------------|:-----------------------------:|
+| `wc` / `wc -l` / `wc -w` results recorded correctly | 8 |
+| Correct use of `grep` + pipe to `wc -l` for both "Watson" and "Holmes" | 9 |
+| Correct identification of which name appears on more lines | 3 |
+
+### Part 3 — Regex Challenges (35 pts)
+
+| Criteria                                           | Points |
+|----------------------------------------------------|:------:|
+| Task 1 (Holmes/Watson, word-initial + alternation) |   7    |
+| Task 2 (five-letter words)                         |   7    |
+| Task 3 (lines ending in `?`, correctly escaped)    |   7    |
+| Task 4 (repeated-letter backreference)             |   7    |
+| Task 5 (whole-word "he"/"she" count)               |   7    |
+
+### Presentation & Reproducibility (5 pts)
+
+| Criteria | Points |
+|-----------------------------------------|:-----------------------------:|
+| File named correctly; commands and answers clearly organized by part; reflection included; GitHub link points to the `hw1` folder | 5 |
