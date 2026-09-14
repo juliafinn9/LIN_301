@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dr.&nbsp;Andrew M. Byrd">
+
+<title>HW 1 — The Command Prompt</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="hw1_command_prompt_files/libs/clipboard/clipboard.min.js"></script>
+<script src="hw1_command_prompt_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="hw1_command_prompt_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="hw1_command_prompt_files/libs/quarto-html/popper.min.js"></script>
+<script src="hw1_command_prompt_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="hw1_command_prompt_files/libs/quarto-html/anchor.min.js"></script>
+<link href="hw1_command_prompt_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="hw1_command_prompt_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="hw1_command_prompt_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="hw1_command_prompt_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="hw1_command_prompt_files/libs/bootstrap/bootstrap-f857a4ff95389ea243bd223d408f23f9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#part-1-navigating-managing-files" id="toc-part-1-navigating-managing-files" class="nav-link" data-scroll-target="#part-1-navigating-managing-files">Part 1 — Navigating &amp; Managing Files</a></li>
+  <li><a href="#part-2-counting-searching" id="toc-part-2-counting-searching" class="nav-link" data-scroll-target="#part-2-counting-searching">Part 2 — Counting &amp; Searching</a></li>
+  <li><a href="#part-3-regex-challenges" id="toc-part-3-regex-challenges" class="nav-link" data-scroll-target="#part-3-regex-challenges">Part 3 — Regex Challenges</a></li>
+  <li><a href="#part-4-reflection" id="toc-part-4-reflection" class="nav-link" data-scroll-target="#part-4-reflection">Part 4 — Reflection</a></li>
+  <li><a href="#submission" id="toc-submission" class="nav-link" data-scroll-target="#submission">Submission</a></li>
+  <li><a href="#grading-rubric-100-pts-total" id="toc-grading-rubric-100-pts-total" class="nav-link" data-scroll-target="#grading-rubric-100-pts-total">Grading Rubric (100 pts total)</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">HW 1 — The Command Prompt</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<p class="subtitle lead">LIN 301: Computation for Linguists</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Dr.&nbsp;Andrew M. Byrd </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>During class in week 2 you learned how to navigate, create, move, and search files entirely from the Terminal — no mouse required. This assignment asks you to do the same set of tasks on a <strong>new text</strong> (not one we used in class), so you’re practicing the skills rather than replaying what you already typed.</p>
+<p>By the end, you should be able to:</p>
+<ul>
+<li>Navigate a file system and create/rename/remove files and folders from the command line.</li>
+<li>Write and run a short shell script that automates a repeatable setup task.</li>
+<li>Use <code>wc</code>, <code>grep</code>, and piping (<code>|</code>) to count and search inside a text file.</li>
+<li>Write basic regular expressions (<code>grep -E</code>) to find patterns in text.</li>
+</ul>
+<p>You will create <strong>one</strong> Quarto document named <code>hw1_command_prompt_lastname_firstname.qmd</code>, living inside a folder called <code>hw1</code> in your <code>homework/</code> folder — you won’t submit this file itself, just a URL pointing to it (see <strong>Submission</strong> below for exactly how that works). For every numbered task below, record in your document: (a) the exact command(s) you typed, in a fenced <code>bash</code> code block; (b) whenever a task says “record,” “confirm,” or otherwise asks you to report a result, the actual terminal output, pasted as a second code block right below the command that produced it; and (c) the answer to any question that’s asked. You’re documenting what you did in the Terminal — none of these code blocks need to be “run” by Quarto itself.</p>
+<hr>
+</section>
+<section id="part-1-navigating-managing-files" class="level2">
+<h2 class="anchored" data-anchor-id="part-1-navigating-managing-files">Part 1 — Navigating &amp; Managing Files</h2>
+<p>Do all of the following inside the integrated Terminal in VSCode. <code>cd</code> into your <code>LIN_301/homework</code> folder, then create a new folder called <code>hw1</code> and <code>cd</code> into it — this is where everything for this assignment lives, both your working files and your <code>.qmd</code> write-up. Copy the assignment file from your <code>301_2026</code> folder into this new folder, renaming it as you go — this becomes the document you’ll actually work in:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ~/301_2026/homework/hw1_command_prompt.qmd ./hw1_command_prompt_lastname_firstname.qmd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ol type="1">
+<li><p>Download <em>The Adventures of Sherlock Holmes</em> from Project Gutenberg using <code>curl</code>, naming the file <code>holmes.txt</code>: <code>https://www.gutenberg.org/cache/epub/1661/pg1661.txt</code></p></li>
+<li><p>Confirm the file downloaded and check its size using <code>ls -l</code>.</p></li>
+<li><p>Create three nested folders: <code>drafts</code> &gt; <code>working</code> &gt; <code>final</code> (i.e., <code>working</code> sits inside <code>drafts</code>, and <code>final</code> sits inside <code>working</code>).</p></li>
+<li><p>Use <code>touch</code> to create an empty file called <code>log.txt</code>.</p></li>
+<li><p>Move <code>log.txt</code> into the <code>final</code> folder.</p></li>
+<li><p>You’ve decided <code>drafts</code> is a bad name for the top folder — rename it to <code>notes</code> (remember: <code>mv</code> is also how you rename in bash).</p></li>
+<li><p>Create one more throwaway folder called <code>scratch</code>, then remove it using <code>rm -r</code>.</p></li>
+<li><p><strong>Write a script.</strong> Create a file called <code>setup.sh</code> that, when run, does the following in one shot:</p>
+<ul>
+<li>creates a new folder called <code>backup_check</code></li>
+<li>downloads <code>holmes.txt</code> again into that folder (same <code>curl</code> command as step 1, adjusted for the new destination)</li>
+<li>prints a message to the screen confirming the download (<code>echo</code>)</li>
+</ul>
+<p>Run your script with <code>source setup.sh</code> and confirm it worked with <code>ls</code>.</p></li>
+</ol>
+<p><strong>Question:</strong> What’s the difference between <code>rmdir</code> and <code>rm -r</code>? Why did you need <code>rm -r</code> in step 7 and not <code>rmdir</code>?</p>
+<hr>
+</section>
+<section id="part-2-counting-searching" class="level2">
+<h2 class="anchored" data-anchor-id="part-2-counting-searching">Part 2 — Counting &amp; Searching</h2>
+<ol start="9" type="1">
+<li>Run <code>wc</code>, <code>wc -l</code>, and <code>wc -w</code> on <code>holmes.txt</code>. Record all three outputs.</li>
+<li>Use <code>grep</code> to find every line containing the name <strong>“Watson”</strong>. Then pipe that into <code>wc -l</code> to get a single count of how many lines mention him.</li>
+<li>Do the same for <strong>“Holmes”</strong>. Which name appears on more lines?</li>
+</ol>
+<hr>
+</section>
+<section id="part-3-regex-challenges" class="level2">
+<h2 class="anchored" data-anchor-id="part-3-regex-challenges">Part 3 — Regex Challenges</h2>
+<p>Using <code>grep -E</code> on <code>holmes.txt</code>, find each of the following. For each one, write the command you used <em>and</em> the answer/result.</p>
+<ol type="1">
+<li>Every instance where a word begins with “Holmes” or “Watson.”</li>
+<li>All five-letter words in the file.</li>
+<li>All lines that end in a question mark (remember <code>?</code> is a special character in regex — you’ll need to escape it with <code>\</code>).</li>
+<li>All instances of a letter repeated twice in a row (like “ee” in “sleep” or “ss” in “glass”), using a backreference.</li>
+<li>The total number of times “he” or “He” or “she” or “She” appears as its own word (not buried inside a longer word like “the” or “shelf”).</li>
+</ol>
+<hr>
+</section>
+<section id="part-4-reflection" class="level2">
+<h2 class="anchored" data-anchor-id="part-4-reflection">Part 4 — Reflection</h2>
+<p>At the bottom of your document, write a short (3–5 sentence) reflection:</p>
+<ul>
+<li>What was the easiest part of this assignment? What was the hardest?</li>
+<li>Now that you’ve used <code>grep</code> and regex on an English text, can you think of a linguistic question (phonological, morphological, syntactic) you could investigate this way on a text or corpus?</li>
+</ul>
+<hr>
+</section>
+<section id="submission" class="level2">
+<h2 class="anchored" data-anchor-id="submission">Submission</h2>
+<p>Your <code>LIN_301</code> repo is public, so instead of uploading a file to Canvas, you’ll submit a <strong>link</strong> straight to your <code>homework/hw1</code> folder on GitHub — that one folder holds everything (your <code>.qmd</code> write-up and all your working files), so a single link is all a grader needs. No rendering required, since this homework is just documented commands and written answers (nothing gets computed, so there’s no output a render would add).</p>
+<ol type="1">
+<li><p><strong>Push everything.</strong> Stage, commit, and push your entire <code>homework/hw1</code> folder — your <code>.qmd</code> file, <code>holmes.txt</code>, <code>setup.sh</code>, and the <code>notes</code> folder structure — to your <code>LIN_301</code> GitHub repo — same stage → commit → push you’ve been doing all along.</p></li>
+<li><p><strong>Get the folder’s GitHub address.</strong> On github.com, navigate into your repo to <code>homework/hw1</code>, and copy the URL from your browser’s address bar. It’ll look like:</p>
+<pre><code>https://github.com/your-username/LIN_301/tree/main/homework/hw1</code></pre></li>
+<li><p><strong>Submit that link on Canvas</strong> — no file upload needed.</p></li>
+<li><p>Be sure to replace “lastname_firstname” with your actual last name and first name in your <code>.qmd</code> filename.</p></li>
+</ol>
+<hr>
+</section>
+<section id="grading-rubric-100-pts-total" class="level2">
+<h2 class="anchored" data-anchor-id="grading-rubric-100-pts-total">Grading Rubric (100 pts total)</h2>
+<section id="part-1-navigating-managing-files-40-pts" class="level3">
+<h3 class="anchored" data-anchor-id="part-1-navigating-managing-files-40-pts">Part 1 — Navigating &amp; Managing Files (40 pts)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 56%">
+<col style="width: 43%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Criteria</th>
+<th style="text-align: center;">Points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>hw1</code> folder created; <code>holmes.txt</code> downloaded correctly via <code>curl</code></td>
+<td style="text-align: center;">7</td>
+</tr>
+<tr class="even">
+<td>Nested folder structure (<code>notes</code> &gt; <code>working</code> &gt; <code>final</code>) created correctly</td>
+<td style="text-align: center;">7</td>
+</tr>
+<tr class="odd">
+<td><code>log.txt</code> created with <code>touch</code> and moved into <code>final</code></td>
+<td style="text-align: center;">6</td>
+</tr>
+<tr class="even">
+<td><code>drafts</code> successfully renamed to <code>notes</code> using <code>mv</code></td>
+<td style="text-align: center;">4</td>
+</tr>
+<tr class="odd">
+<td><code>scratch</code> folder created and removed with <code>rm -r</code></td>
+<td style="text-align: center;">4</td>
+</tr>
+<tr class="even">
+<td><code>setup.sh</code> script written correctly and runs successfully with <code>source</code></td>
+<td style="text-align: center;">10</td>
+</tr>
+<tr class="odd">
+<td>Answer to <code>rmdir</code> vs.&nbsp;<code>rm -r</code> question is accurate</td>
+<td style="text-align: center;">2</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="part-2-counting-searching-20-pts" class="level3">
+<h3 class="anchored" data-anchor-id="part-2-counting-searching-20-pts">Part 2 — Counting &amp; Searching (20 pts)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 56%">
+<col style="width: 43%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Criteria</th>
+<th style="text-align: center;">Points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>wc</code> / <code>wc -l</code> / <code>wc -w</code> results recorded correctly</td>
+<td style="text-align: center;">8</td>
+</tr>
+<tr class="even">
+<td>Correct use of <code>grep</code> + pipe to <code>wc -l</code> for both “Watson” and “Holmes”</td>
+<td style="text-align: center;">9</td>
+</tr>
+<tr class="odd">
+<td>Correct identification of which name appears on more lines</td>
+<td style="text-align: center;">3</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="part-3-regex-challenges-35-pts" class="level3">
+<h3 class="anchored" data-anchor-id="part-3-regex-challenges-35-pts">Part 3 — Regex Challenges (35 pts)</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Criteria</th>
+<th style="text-align: center;">Points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Task 1 (Holmes/Watson, word-initial + alternation)</td>
+<td style="text-align: center;">7</td>
+</tr>
+<tr class="even">
+<td>Task 2 (five-letter words)</td>
+<td style="text-align: center;">7</td>
+</tr>
+<tr class="odd">
+<td>Task 3 (lines ending in <code>?</code>, correctly escaped)</td>
+<td style="text-align: center;">7</td>
+</tr>
+<tr class="even">
+<td>Task 4 (repeated-letter backreference)</td>
+<td style="text-align: center;">7</td>
+</tr>
+<tr class="odd">
+<td>Task 5 (whole-word “he”/“she” count)</td>
+<td style="text-align: center;">7</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="presentation-reproducibility-5-pts" class="level3">
+<h3 class="anchored" data-anchor-id="presentation-reproducibility-5-pts">Presentation &amp; Reproducibility (5 pts)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 56%">
+<col style="width: 43%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Criteria</th>
+<th style="text-align: center;">Points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>File named correctly; commands and answers clearly organized by part; reflection included; GitHub link points to the <code>hw1</code> folder</td>
+<td style="text-align: center;">5</td>
+</tr>
+</tbody>
+</table>
+<!-- -->
+
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const cellDetails = window.document.querySelectorAll(".cell details.code-fold");
+        for (let i=0; i<cellDetails.length; i++) {
+          const details = cellDetails[i];
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell div.sourceCode.cell-code");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "HW 1 — The Command Prompt"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "LIN 301: Computation for Linguists"</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Dr. Andrew M. Byrd"</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-depth: 2</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="an">fontsize:</span><span class="co"> 12pt</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">## Overview</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>During class in week 2 you learned how to navigate, create, move, and search files entirely from the Terminal — no mouse required. This assignment asks you to do the same set of tasks on a **new text** (not one we used in class), so you're practicing the skills rather than replaying what you already typed.</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>By the end, you should be able to:</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Navigate a file system and create/rename/remove files and folders from the command line.</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Write and run a short shell script that automates a repeatable setup task.</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Use <span class="in">`wc`</span>, <span class="in">`grep`</span>, and piping (<span class="in">`|`</span>) to count and search inside a text file.</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Write basic regular expressions (<span class="in">`grep -E`</span>) to find patterns in text.</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>You will create **one** Quarto document named `hw1_command_prompt_lastname_firstname.qmd`, living inside a folder called `hw1` in your `homework/` folder — you won't submit this file itself, just a URL pointing to it (see **Submission** below for exactly how that works). For every numbered task below, record in your document: (a) the exact command(s) you typed, in a fenced <span class="in">`bash`</span> code block; (b) whenever a task says "record," "confirm," or otherwise asks you to report a result, the actual terminal output, pasted as a second code block right below the command that produced it; and (c) the answer to any question that's asked. You're documenting what you did in the Terminal — none of these code blocks need to be "run" by Quarto itself.</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="fu">## Part 1 — Navigating &amp; Managing Files</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>Do all of the following inside the integrated Terminal in VSCode. <span class="in">`cd`</span> into your <span class="in">`LIN_301/homework`</span> folder, then create a new folder called <span class="in">`hw1`</span> and <span class="in">`cd`</span> into it — this is where everything for this assignment lives, both your working files and your <span class="in">`.qmd`</span> write-up. Copy the assignment file from your <span class="in">`301_2026`</span> folder into this new folder, renaming it as you go — this becomes the document you'll actually work in:</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="in">``` bash</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ~/301_2026/homework/hw1_command_prompt.qmd ./hw1_command_prompt_lastname_firstname.qmd</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Download *The Adventures of Sherlock Holmes* from Project Gutenberg using <span class="in">`curl`</span>, naming the file <span class="in">`holmes.txt`</span>: <span class="in">`https://www.gutenberg.org/cache/epub/1661/pg1661.txt`</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Confirm the file downloaded and check its size using <span class="in">`ls -l`</span>.</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>Create three nested folders: <span class="in">`drafts`</span> <span class="sc">\&gt;</span> <span class="in">`working`</span> <span class="sc">\&gt;</span> <span class="in">`final`</span> (i.e., <span class="in">`working`</span> sits inside <span class="in">`drafts`</span>, and <span class="in">`final`</span> sits inside <span class="in">`working`</span>).</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>Use <span class="in">`touch`</span> to create an empty file called <span class="in">`log.txt`</span>.</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="ss">5.  </span>Move <span class="in">`log.txt`</span> into the <span class="in">`final`</span> folder.</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="ss">6.  </span>You've decided <span class="in">`drafts`</span> is a bad name for the top folder — rename it to <span class="in">`notes`</span> (remember: <span class="in">`mv`</span> is also how you rename in bash).</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="ss">7.  </span>Create one more throwaway folder called <span class="in">`scratch`</span>, then remove it using <span class="in">`rm -r`</span>.</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="ss">8.  </span>**Write a script.** Create a file called <span class="in">`setup.sh`</span> that, when run, does the following in one shot:</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>creates a new folder called <span class="in">`backup_check`</span></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>downloads <span class="in">`holmes.txt`</span> again into that folder (same <span class="in">`curl`</span> command as step 1, adjusted for the new destination)</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>prints a message to the screen confirming the download (<span class="in">`echo`</span>)</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>    Run your script with <span class="in">`source setup.sh`</span> and confirm it worked with <span class="in">`ls`</span>.</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>**Question:** What's the difference between <span class="in">`rmdir`</span> and <span class="in">`rm -r`</span>? Why did you need <span class="in">`rm -r`</span> in step 7 and not <span class="in">`rmdir`</span>?</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a><span class="fu">## Part 2 — Counting &amp; Searching</span></span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a><span class="ss">9.  </span>Run <span class="in">`wc`</span>, <span class="in">`wc -l`</span>, and <span class="in">`wc -w`</span> on <span class="in">`holmes.txt`</span>. Record all three outputs.</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a><span class="ss">10. </span>Use <span class="in">`grep`</span> to find every line containing the name **"Watson"**. Then pipe that into <span class="in">`wc -l`</span> to get a single count of how many lines mention him.</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a><span class="ss">11. </span>Do the same for **"Holmes"**. Which name appears on more lines?</span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a><span class="fu">## Part 3 — Regex Challenges</span></span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>Using <span class="in">`grep -E`</span> on <span class="in">`holmes.txt`</span>, find each of the following. For each one, write the command you used *and* the answer/result.</span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Every instance where a word begins with "Holmes" or "Watson."</span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>All five-letter words in the file.</span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>All lines that end in a question mark (remember <span class="in">`?`</span> is a special character in regex — you'll need to escape it with <span class="in">`\`</span>).</span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>All instances of a letter repeated twice in a row (like "ee" in "sleep" or "ss" in "glass"), using a backreference.</span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a><span class="ss">5.  </span>The total number of times "he" or "He" or "she" or "She" appears as its own word (not buried inside a longer word like "the" or "shelf").</span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a><span class="fu">## Part 4 — Reflection</span></span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a>At the bottom of your document, write a short (3–5 sentence) reflection:</span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>What was the easiest part of this assignment? What was the hardest?</span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Now that you've used <span class="in">`grep`</span> and regex on an English text, can you think of a linguistic question (phonological, morphological, syntactic) you could investigate this way on a text or corpus?</span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a><span class="fu">## Submission</span></span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a>Your <span class="in">`LIN_301`</span> repo is public, so instead of uploading a file to Canvas, you'll submit a **link** straight to your <span class="in">`homework/hw1`</span> folder on GitHub — that one folder holds everything (your <span class="in">`.qmd`</span> write-up and all your working files), so a single link is all a grader needs. No rendering required, since this homework is just documented commands and written answers (nothing gets computed, so there's no output a render would add).</span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>**Push everything.** Stage, commit, and push your entire <span class="in">`homework/hw1`</span> folder — your <span class="in">`.qmd`</span> file, <span class="in">`holmes.txt`</span>, <span class="in">`setup.sh`</span>, and the <span class="in">`notes`</span> folder structure — to your <span class="in">`LIN_301`</span> GitHub repo — same stage → commit → push you've been doing all along.</span>
+<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>**Get the folder's GitHub address.** On github.com, navigate into your repo to <span class="in">`homework/hw1`</span>, and copy the URL from your browser's address bar. It'll look like:</span>
+<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a>    <span class="in">```         </span></span>
+<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a><span class="in">    https://github.com/your-username/LIN_301/tree/main/homework/hw1</span></span>
+<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a><span class="in">    ```</span></span>
+<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>**Submit that link on Canvas** — no file upload needed.</span>
+<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>Be sure to replace "lastname_firstname" with your actual last name and first name in your <span class="in">`.qmd`</span> filename.</span>
+<span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-109"><a href="#cb3-109" aria-hidden="true" tabindex="-1"></a><span class="fu">## Grading Rubric (100 pts total)</span></span>
+<span id="cb3-110"><a href="#cb3-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-111"><a href="#cb3-111" aria-hidden="true" tabindex="-1"></a><span class="fu">### Part 1 — Navigating &amp; Managing Files (40 pts)</span></span>
+<span id="cb3-112"><a href="#cb3-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-113"><a href="#cb3-113" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Criteria <span class="pp">|</span> Points <span class="pp">|</span></span>
+<span id="cb3-114"><a href="#cb3-114" aria-hidden="true" tabindex="-1"></a><span class="pp">|-----------------------------------------|:-----------------------------:|</span></span>
+<span id="cb3-115"><a href="#cb3-115" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`hw1`</span> folder created; <span class="in">`holmes.txt`</span> downloaded correctly via <span class="in">`curl`</span> <span class="pp">|</span> 7 <span class="pp">|</span></span>
+<span id="cb3-116"><a href="#cb3-116" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Nested folder structure (<span class="in">`notes`</span> <span class="sc">\&gt;</span> <span class="in">`working`</span> <span class="sc">\&gt;</span> <span class="in">`final`</span>) created correctly <span class="pp">|</span> 7 <span class="pp">|</span></span>
+<span id="cb3-117"><a href="#cb3-117" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`log.txt`</span> created with <span class="in">`touch`</span> and moved into <span class="in">`final`</span> <span class="pp">|</span> 6 <span class="pp">|</span></span>
+<span id="cb3-118"><a href="#cb3-118" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`drafts`</span> successfully renamed to <span class="in">`notes`</span> using <span class="in">`mv`</span> <span class="pp">|</span> 4 <span class="pp">|</span></span>
+<span id="cb3-119"><a href="#cb3-119" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`scratch`</span> folder created and removed with <span class="in">`rm -r`</span> <span class="pp">|</span> 4 <span class="pp">|</span></span>
+<span id="cb3-120"><a href="#cb3-120" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`setup.sh`</span> script written correctly and runs successfully with <span class="in">`source`</span> <span class="pp">|</span> 10 <span class="pp">|</span></span>
+<span id="cb3-121"><a href="#cb3-121" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Answer to <span class="in">`rmdir`</span> vs. <span class="in">`rm -r`</span> question is accurate <span class="pp">|</span> 2 <span class="pp">|</span></span>
+<span id="cb3-122"><a href="#cb3-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-123"><a href="#cb3-123" aria-hidden="true" tabindex="-1"></a><span class="fu">### Part 2 — Counting &amp; Searching (20 pts)</span></span>
+<span id="cb3-124"><a href="#cb3-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-125"><a href="#cb3-125" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Criteria <span class="pp">|</span> Points <span class="pp">|</span></span>
+<span id="cb3-126"><a href="#cb3-126" aria-hidden="true" tabindex="-1"></a><span class="pp">|-----------------------------------------|:-----------------------------:|</span></span>
+<span id="cb3-127"><a href="#cb3-127" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`wc`</span> / <span class="in">`wc -l`</span> / <span class="in">`wc -w`</span> results recorded correctly <span class="pp">|</span> 8 <span class="pp">|</span></span>
+<span id="cb3-128"><a href="#cb3-128" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Correct use of <span class="in">`grep`</span> + pipe to <span class="in">`wc -l`</span> for both "Watson" and "Holmes" <span class="pp">|</span> 9 <span class="pp">|</span></span>
+<span id="cb3-129"><a href="#cb3-129" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Correct identification of which name appears on more lines <span class="pp">|</span> 3 <span class="pp">|</span></span>
+<span id="cb3-130"><a href="#cb3-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-131"><a href="#cb3-131" aria-hidden="true" tabindex="-1"></a><span class="fu">### Part 3 — Regex Challenges (35 pts)</span></span>
+<span id="cb3-132"><a href="#cb3-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-133"><a href="#cb3-133" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Criteria                                           <span class="pp">|</span> Points <span class="pp">|</span></span>
+<span id="cb3-134"><a href="#cb3-134" aria-hidden="true" tabindex="-1"></a><span class="pp">|----------------------------------------------------|:------:|</span></span>
+<span id="cb3-135"><a href="#cb3-135" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Task 1 (Holmes/Watson, word-initial + alternation) <span class="pp">|</span>   7    <span class="pp">|</span></span>
+<span id="cb3-136"><a href="#cb3-136" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Task 2 (five-letter words)                         <span class="pp">|</span>   7    <span class="pp">|</span></span>
+<span id="cb3-137"><a href="#cb3-137" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Task 3 (lines ending in <span class="in">`?`</span>, correctly escaped)    <span class="pp">|</span>   7    <span class="pp">|</span></span>
+<span id="cb3-138"><a href="#cb3-138" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Task 4 (repeated-letter backreference)             <span class="pp">|</span>   7    <span class="pp">|</span></span>
+<span id="cb3-139"><a href="#cb3-139" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Task 5 (whole-word "he"/"she" count)               <span class="pp">|</span>   7    <span class="pp">|</span></span>
+<span id="cb3-140"><a href="#cb3-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-141"><a href="#cb3-141" aria-hidden="true" tabindex="-1"></a><span class="fu">### Presentation &amp; Reproducibility (5 pts)</span></span>
+<span id="cb3-142"><a href="#cb3-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-143"><a href="#cb3-143" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Criteria <span class="pp">|</span> Points <span class="pp">|</span></span>
+<span id="cb3-144"><a href="#cb3-144" aria-hidden="true" tabindex="-1"></a><span class="pp">|-----------------------------------------|:-----------------------------:|</span></span>
+<span id="cb3-145"><a href="#cb3-145" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> File named correctly; commands and answers clearly organized by part; reflection included; GitHub link points to the <span class="in">`hw1`</span> folder <span class="pp">|</span> 5 <span class="pp">|</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
