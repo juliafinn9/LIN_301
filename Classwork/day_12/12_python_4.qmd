@@ -4,34 +4,34 @@ subtitle: "Beginning Python: Lists"
 date: "September 21, 2026"
 author: "Dr. Andrew M. Byrd"
 format:
-  revealjs:
-    css: header_shrink.css
-    theme: beige
-    slide-number: true
-    center: true
-    toc: true
-    toc-title: "Plan for the Day"
-    toc-depth: 1
+revealjs:
+css: header_shrink.css
+theme: beige
+slide-number: true
+center: true
+toc: true
+toc-title: "Plan for the Day"
+toc-depth: 1
 editor: visual
 ---
 
 # Setting Up for Today
 
--   Create: `classwork/day_12`
--   For `.qmd` & `.html` files, visit: <https://winjapati.github.io/courses/301/301_homepage.html>
+- Create: `classwork/day_12`
+- For `.qmd` & `.html` files, visit: <https://winjapati.github.io/courses/301/301_homepage.html>
 
 # Review
 
--   What did you learn last time?
+- What did you learn last time?
 
 ## Recap from Last Time
 
 Recap from last module:
 
--   Assign a value to a variable with `=`
--   **Numbers**: `integer` and `float`
--   **Strings**: text inside quotes `"..."` or `'...'`
--   **Booleans**: `True` and `False`, used for logical comparisons
+- Assign a value to a variable with `=`
+- **Numbers**: `integer` and `float`
+- **Strings**: text inside quotes `"..."` or `'...'`
+- **Booleans**: `True` and `False`, used for logical comparisons
 
 Example:
 
@@ -62,9 +62,9 @@ print("Aspirated?", aspirated)
 
 ## Logical Operators
 
--   `not` flips a boolean\
--   `and` is true if **both** are true\
--   `or` is true if **at least one** is true
+- `not` flips a boolean\
+- `and` is true if **both** are true\
+- `or` is true if **at least one** is true
 
 ## Examples
 
@@ -110,22 +110,22 @@ Today we're examining the first of two very important data structures in Python:
 
 ## Moving from Variables to Lists
 
--   We can assign a single value to a variable:
+- We can assign a single value to a variable:
 
 ``` python
 first_novel = "Sense and Sensibility"
 ```
 
--   But what if we wanted to create a variable called `novels` with multiple values?
-    -   For this we can create a **list**
--   Lists:
-    -   Are marked in Python in brackets `[...]`
-    -   Are **ordered** (such that the order of items is preserved)
-    -   Contain values that can be deleted and new ones can be added
+- But what if we wanted to create a variable called `novels` with multiple values?
+  - For this we can create a **list**
+- Lists:
+  - Are marked in Python in brackets `[...]`
+  - Are **ordered** (such that the order of items is preserved)
+  - Contain values that can be deleted and new ones can be added
 
 ## Creating a List
 
--   Jane Austen published **seven novels**, which we can put into a **list**:
+- Jane Austen published **seven novels**, which we can put into a **list**:
 
 ``` python
 novels = ["Sense and Sensibility", "Pride and Prejudice", "Mansfield Park", "Emma", "Northanger Abbey", "Persuasion", "Lady Susan"]
@@ -155,19 +155,19 @@ word = "pin"
 print(word[0])
 ```
 
--   What is printed?
--   The number within the brackets `[ ... ]` is called the **index**
+- What is printed?
+- The number within the brackets `[ ... ]` is called the **index**
 
 ## Indexing a List
 
--   Just like `word[0]`, we access the first element of a list with the index `[0]`.
+- Just like `word[0]`, we access the first element of a list with the index `[0]`.
 
 ``` python
 novels[0]  # first item
 novels[1]  # second item
 ```
 
--   Try:
+- Try:
 
 ``` python
 novels[6]
@@ -175,15 +175,15 @@ novels[6]
 
 ## How about the reverse?
 
--   Before we wanted to find out what the **7th** novel was by using novels\[6\].
--   But what if we wanted to find out the index of a particular novel? (Such as *Lady Susan*)
+- Before we wanted to find out what the **7th** novel was by using novels\[6\].
+- But what if we wanted to find out the index of a particular novel? (Such as *Lady Susan*)
 
 ## Getting the Index of a Value
 
--   We can use the **method** of a value.
-    -   Methods are indicated with `.method`
-    -   `value.method`
--   Let's use the `list.index()` method to identify the index
+- We can use the **method** of a value.
+  - Methods are indicated with `.method`
+  - `value.method`
+- Let's use the `list.index()` method to identify the index
 
 ``` python
 novels.index("Lady Susan")
@@ -192,12 +192,12 @@ novels.index("Lady Susan")
 
 ## Getting the Index of a Value: Practice
 
--   Let's use the `list.index()` method to identify the index
-    -   Using this method, identify the index of "Pride and Prejudice".
+- Let's use the `list.index()` method to identify the index
+  - Using this method, identify the index of "Pride and Prejudice".
 
 ## Aligning lists using indices
 
--   We can use the index of one list to align with another list
+- We can use the index of one list to align with another list
 
 ``` python
 pub_year = [1811, 1813, 1814, 1815, 1818, 1818, 1871]
@@ -205,11 +205,11 @@ susan_index = novels.index("Lady Susan")
 pub_year[susan_index]  # 1871
 ```
 
--   What is this code really doing?
+- What is this code really doing?
 
 ## Reverse Lookup
 
--   We could do the reverse, and find a specific book by year:
+- We could do the reverse, and find a specific book by year:
 
 ``` python
 year_index = pub_year.index(1814)
@@ -217,7 +217,7 @@ novels[year_index]
 # 'Mansfield Park'
 ```
 
--   What happens if we use `1818` as the index?
+- What happens if we use `1818` as the index?
 
 ## Negative Indexing
 
@@ -230,14 +230,14 @@ novels[-1]
 
 ## Activity
 
--   Below is a list of novels written by George Orwell. Copy and paste this code to create both lists in your code.
+- Below is a list of novels written by George Orwell. Copy and paste this code to create both lists in your code.
 
 ``` python
 orwell_novels = ["Animal Farm", "Nineteen Eighty-Four", "Burmese Days", "Keep the Aspidistra Flying", "Coming Up for Air"]
 pub_year = [1945, 1949, 1934, 1936, 1939]
 ```
 
--   Next, do the following:
+- Next, do the following:
 
 1.  Print the names of the first and last novel.
 2.  Use `.index()` to find the position of *Burmese Days*. Use that index to print the corresponding publication year from `pub_year`.
@@ -247,26 +247,26 @@ pub_year = [1945, 1949, 1934, 1936, 1939]
 
 ## Slicing
 
--   Let's return to Austen's `novels`
--   We can use a **range** of values in lists, using the `:` symbol:
+- Let's return to Austen's `novels`
+- We can use a **range** of values in lists, using the `:` symbol:
 
 ``` python
 novels[0:3]
 # ['Sense and Sensibility', 'Pride and Prejudice', 'Mansfield Park']
 ```
 
--   Note: the stop index is not included! (It's not 0-3, it's 0-2)
+- Note: the stop index is not included! (It's not 0-3, it's 0-2)
 
 ## Membership Test
 
--   We can also check to see if a value is in a list using the operator `in`
+- We can also check to see if a value is in a list using the operator `in`
 
 ``` python
 "Emma" in novels          # True
 "Frankenstein" in novels  # False
 ```
 
--   Or with a variable:
+- Or with a variable:
 
 ``` python
 novel_to_check = "Lady Susan"
@@ -275,7 +275,7 @@ novel_to_check in novels
 
 ## Complex Lists
 
--   Lists can contain pretty much anything — even other lists:
+- Lists can contain pretty much anything — even other lists:
 
 ``` python
 complex_list = [["Sense and Sensibility", 1811],
@@ -291,10 +291,10 @@ complex_list[0]      # ["Sense and Sensibility", 1811]
 complex_list[2][1]   # 1814
 ```
 
--   Having a way to have two members within a list would be super useful for linguists
--   Languages do have lexicons after all!
-    -   form : meaning
--   Next time, we'll meet a data structure built exactly for that: the **dictionary**
+- Having a way to have two members within a list would be super useful for linguists
+- Languages do have lexicons after all!
+  - form : meaning
+- Next time, we'll meet a data structure built exactly for that: the **dictionary**
 
 # Activity Answers
 
