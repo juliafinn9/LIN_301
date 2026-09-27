@@ -53,13 +53,13 @@ A few facts to work with: Homer's *Odyssey* is 24 books long. The Trojan War las
 
 1.  Create three variables: `books = 24`, `war_years = 10`, and `journey_years = 10`.
 2.  Create a variable `total_years_away` using `war_years` and `journey_years`, and print it.
-3.  Suppose you wanted to read all 24 books at a steady pace over 7 weeks. Create `books_per_week` using floor division (`//`), and `leftover_books` using modulus (`%`). Print both — what do they tell you about your reading plan?
-4.  Print the `type()` of `books`, `total_years_away`, and `books_per_week`. Are any of them different from what you expected?
+3.  Suppose you wanted to read all 24 books at a steady pace over 7 weeks. Create `books_per_week` using floor division (`//`), and `leftover_books` using modulus (`%`). Print both — what do they tell you about your reading plan? You will need to read a little over three books per week.
+4.  Print the `type()` of `books`, `total_years_away`, and `books_per_week`. Are any of them different from what you expected? No, I expected all of them to be integers. 
 
 ### Strings
 
 5.  Create two variables: `hero = "Odysseus"` and `epithet` set to a short phrase describing him (your own words are fine — e.g. "man of many wiles").
-6.  Concatenate `hero` and `epithet` with `+` (remember the space won't appear on its own). Then print `hero` and `epithet` the other way, with `print(hero, epithet)`. What's different about the two outputs?
+6.  Concatenate `hero` and `epithet` with `+` (remember the space won't appear on its own). Then print `hero` and `epithet` the other way, with `print(hero, epithet)`. What's different about the two outputs? The first output requires extra steps to include spacing, while the second output seems an easier way to display both strings together. 
 7.  Homer is sometimes translated as calling him "the man of twists and turns." Assign that **exact sentence, including the quotation marks,** to a variable called `homer_quote`. You'll need to either escape the internal quotes with `\"` or use a different quote character to wrap the string — your call, just make it run without a `SyntaxError`.
 
 ### Booleans
@@ -110,13 +110,14 @@ words = text.split()
 17. Build `unique_words = set(words)`. Print `len(unique_words)`.
 18. Compute the type-token ratio for the whole file: `len(unique_words) / len(words)`.
 19. On Day 14 in class, the two 23-word opening lines we analyzed had type-token ratios around 0.78 and 0.91. Compare those to the ratio you just got for the whole *Odyssey*. Is it higher or lower — and in 2–3 sentences, explain *why* you think that happens as a text gets longer.
+The ratio in the Odyssey is lower than the ratio on Day 14. Since the text is longer, there are more repeated words. This happens because the likelihood of a recurring words gets higher and higher as the text gets longer. 
 
 ### Dictionaries
 
 **New trick:** `.find()` works like the list `.index()` you already know from Day 12, but on a string — it returns the position where a match starts, or `-1` if there isn't one.
 
-20. Try `text.count("Odysseus")`. What do you get?
-21. Whatever number you got, don't assume it means "Odysseus" is scattered evenly through the poem. Use `position = text.find("Odysseus")` to find where one match starts, then slice out `text[position - 150 : position + 150]` to read the sentence around it. Where does it actually turn up — in the middle of a book, or somewhere more limited, like the front matter? Once you've looked, use `"Ulysses" in text` to check which name Butler's own narrative actually relies on, then find the count that works.
+20. Try `text.count("Odysseus")`. What do you get? A low number.
+21. Whatever number you got, don't assume it means "Odysseus" is scattered evenly through the poem. Use `position = text.find("Odysseus")` to find where one match starts, then slice out `text[position - 150 : position + 150]` to read the sentence around it. Where does it actually turn up — in the middle of a book, or somewhere more limited, like the front matter? Once you've looked, use `"Ulysses" in text` to check which name Butler's own narrative actually relies on, then find the count that works. - It turned up in the front of the book. 
 22. Build a dictionary called `character_counts` that maps each of these names to how many times it appears in `text`, using the string method `.count()`: `"Ulysses"`, `"Penelope"` (his wife), `"Telemachus"` (his son), and `"Minerva"` (the goddess who helps him — also a Roman name, standing in for the Greek Athena).
 23. Print `character_counts`.
 24. Using dictionary indexing (not just eyeballing the printed output), confirm which of the four names appears most often.

@@ -1,0 +1,87 @@
+````` markdown
+```{python}
+books = 24
+war_years = 10
+journey_years = 10
+total_years_away = war_years + journey_years
+print(total_years_away)
+books_per_week = books // 7
+leftover_books = books % 7
+print(books_per_week)
+print(leftover_books)
+print(type(books), type(total_years_away), type(books_per_week))
+```
+`````
+````` markdown
+```{python}
+hero = "Odysseus"
+epithet = "man of many ways"
+print(hero +" "+ epithet)
+print(hero, epithet)
+homer_quote = "\"the man of twists and turns\""
+print(homer_quote)
+```
+`````
+````` markdown
+```{python}
+years_match = (war_years == journey_years)
+print(years_match)
+book_number = 18
+is_first_book = book_number == 1
+print(is_first_book)
+is_last_book = book_number == 24
+print(is_last_book)
+is_bookend = book_number == is_first_book or book_number == is_last_book
+print(book_number, is_bookend)
+```
+`````
+````` markdown
+```{python}
+book_number = 11
+my_guess = "they live happily ever after"
+is_double_digit = book_number >= 10
+print(book_number, my_guess, is_double_digit)
+print(type(book_number), type(my_guess), type(is_double_digit))
+```
+`````
+````` markdown
+```{python}
+with open("odyssey.txt", encoding="utf-8") as f:
+    text = f.read()
+words = text.split()
+```
+`````
+````` markdown
+```{python}
+print(len(words))
+words[0:3020]
+print(words[0:3020])
+```
+`````
+````` markdown
+```{python}
+unique_words = set(words)
+print(len(unique_words))
+print(len(unique_words) / len(words))
+```
+`````
+````` markdown
+```{python}
+text.count("Odysseus")
+position = text.find("Odysseus")
+print(text[position - 150 : position + 150])
+text.count("Ulysses")
+position = text.find("Ulysses")
+print(text[position - 150 : position + 150])
+character_counts = {"Ulysses": text.count("Ulysses"), "Penelope": text.count("Penelope"), "Telemachus": text.count("Telemachus"), "Minerva": text.count("Minerva")}
+print(character_counts)
+print(character_counts["Ulysses"])
+print(character_counts["Penelope"])
+print(character_counts["Telemachus"])
+print(character_counts["Minerva"])
+character_counts["Greece"] = text.count("Greece")
+print("this runs")
+```
+`````
+Reflection:
+I was surprised by scale of the text and how many words were included. It was interesting to see how much smaller the type-token ratio was compared to the short lists we used in class. I don't think the type-token ratio was significantly affected, however there might have been a slight increase in unique words due to the differences in speech. In other words, more modern words were used in the Project Gutenberg text versus the older vernacular of the Odyssey. The dictionary felt most natural for the character_counting task because it was an easy way to look at the counts for each character while comparing them at the same time. 
