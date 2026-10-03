@@ -1,0 +1,38 @@
+1. Dataset Description
+
+My dataset is composed of two text files that each contain three Russian poems. One text file contains poems that were translated in 1913, and the other file contains poems that were translated in 2002. The dataset is comprised of about 880 words and is in Russian. 
+
+Tyutchev, Fyodor Ivanovich. Полное собрание сочинений. 7th ed., edited by P. V. Bykov, T-vo A. F. Marks, 1913. Wikisource, “ПСС 1913 (ДО).” Poems: “Наполеон,” “Императору Александру II,” and “Восход солнца.”
+
+Tyutchev, Fyodor Ivanovich. Полное собрание сочинений. 7th ed., edited by P. V. Bykov, T-vo A. F. Marks, 1913. 
+Wikisource, “ПСС 1913 (ДО).” Poems: “Наполеон,” “Императору Александру II,” and “Восход солнца.”
+
+2. Rationale
+
+I chose this dataset because I am studying Russian grammar, and I would like to see how the language has progressed over time. In 1917, there was an orthographic reform in Russia, letters were removed and others had a change in function. I think it would be interesting to compare the different translations and see which letters were removed/added as well as seeing how the function of ‘ъ’ changed. 
+
+3. Type of Analysis
+
+My type of analysis will be a non-English comparison. I will be comparing the different translations/texts. 
+
+4. Preliminary Questions
+
+How did the function of ‘ъ’ change over time?
+
+I expect to find that ‘ъ’ had a more general function in the older translation and a more specific function in the modern age. I expect this because the orthographic reform was mostly driven by a desire to make the written language simpler.
+
+What letters were removed between translations?
+
+Were there any letters that were added to replace the letters removed in 1917?
+
+5. A Look at the Data
+
+```
+Сынъ революціи! Ты съ матерью ужасной
+Отважно въ бой вступилъ и изнемогъ въ борьбѣ
+Не одолѣлъ ея твой геній самовластный!..
+Бой невозможный, трудъ напрасный:
+Ты всю ее носилъ въ самомъ себѣ!..
+```
+
+I used ChatGPT to find the poems and compose the text files. 
