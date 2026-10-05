@@ -1,6 +1,3 @@
-word = input("Give me an English noun, in the singular: ")
-
-sibilants = ["s", "z", "ʃ", "ʒ", "tʃ", "dʒ"] 
 import urllib.request
 
 url = "https://www.gutenberg.org/files/141/141-0.txt"  # Mansfield Park
