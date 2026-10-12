@@ -1,0 +1,160 @@
+```{python}
+
+try:
+    with open("../../data/gutenberg/jane_eyre.txt", "r", encoding="utf-8") as f:
+        eyre_lines = f.readlines()
+except FileNotFoundError:
+    print("Jane Eyre file not found.")
+try:
+    with open("../../data/gutenberg/monte_cristo.txt", "r", encoding="utf-8") as f:
+        cristo_lines = f.readlines()
+except FileNotFoundError:
+    print("Monte Cristo file not found.")
+    with open("../../data/gutenberg/jane_eyre.txt", "r", encoding="utf-8") as f:
+        eyre_lines = f.readlines()
+while not eyre_lines[0].startswith("*** START"):
+    eyre_lines = eyre_lines[1:]     # chop off the first line
+eyre_lines = eyre_lines[1:]         # chop off the *** START line itself
+while not eyre_lines[-1].startswith("*** END"):
+    eyre_lines = eyre_lines[:-1]    # chop off the last line
+eyre_lines = eyre_lines[:-1]        # chop off the *** END line itself
+eyre_text = "".join(eyre_lines)
+
+with open("../../data/gutenberg/monte_cristo.txt", "r", encoding="utf-8") as f:
+        cristo_lines = f.readlines()
+while not cristo_lines[0].startswith("*** START"):
+    cristo_lines = cristo_lines[1:]     # chop off the first line
+cristo_lines = cristo_lines[1:]         # chop off the *** START line itself
+while not cristo_lines[-1].startswith("*** END"):
+    cristo_lines = cristo_lines[:-1]    # chop off the last line
+cristo_lines = cristo_lines[:-1]        # chop off the *** END line itself
+cristo_text = "".join(cristo_lines)
+
+import re
+
+eyre_words = re.split(r"[\W]+", eyre_text.lower())
+eyre_words= [w for w in eyre_words if w != ""]
+
+cristo_words = re.split(r"[\W]+", cristo_text.lower())
+cristo_words = [w for w in cristo_words if w != ""]
+```
+
+```{python}
+
+eyre_ttr = len(set(eyre_words)) / len(eyre_words)
+cristo_ttr = len(set(cristo_words)) / len(cristo_words)
+print(eyre_ttr, cristo_ttr)
+
+eyre_ttr_10000 = len(set(eyre_words[:10000])) / len(eyre_words[:10000])
+cristo_ttr_10000 = len(set(cristo_words[:10000])) / len(cristo_words[:10000])
+print(eyre_ttr_10000, cristo_ttr_10000)
+
+eyre_wd_len_total = 0
+for w in eyre_words:
+    eyre_wd_len_total += len(w)
+eyre_avg_word_len = eyre_wd_len_total / len(eyre_words)
+
+cristo_wd_len_total = 0
+for w in cristo_words:
+    cristo_wd_len_total += len(w)
+cristo_avg_word_len = cristo_wd_len_total / len(cristo_words)
+
+print("Cristo Average Word Length:", cristo_avg_word_len)
+print("Eyre Average Word Length:", eyre_avg_word_len)
+```
+
+```{python}
+
+for word in eyre_words: 
+    if word.endswith("ly"):
+        print(word)
+ly_eyre_rate = len([w for w in eyre_words if w.endswith("ly")]) / len(eyre_words) * 1000
+
+ing_eyre_rate = len([w for w in eyre_words if w.endswith("ing")]) / len(eyre_words) * 1000
+
+er_eyre_rate = len([w for w in eyre_words if w.endswith("er")]) / len(eyre_words) * 1000
+
+ness_eyre_rate = len([w for w in eyre_words if w.endswith("ness")]) / len(eyre_words) * 1000
+
+for word in cristo_words: 
+    if word.endswith("ly"):
+        print(word)
+ly_cristo_rate = len([w for w in cristo_words if w.endswith("ly")]) / len(cristo_words) * 1000
+
+ing_cristo_rate = len([w for w in cristo_words if w.endswith("ing")]) / len(cristo_words) * 1000
+
+er_cristo_rate = len([w for w in cristo_words if w.endswith("er")]) / len(cristo_words) * 1000
+
+ness_cristo_rate = len([w for w in cristo_words if w.endswith("ness")]) / len(cristo_words) * 1000
+
+print(ly_cristo_rate, ing_cristo_rate, er_cristo_rate, ness_cristo_rate)
+print (ly_eyre_rate, ing_eyre_rate, er_eyre_rate, ness_eyre_rate)
+
+eyre_counts = 0
+for l in eyre_lines:
+    if '"' in l or '“' in l or '‘' in l: 
+        eyre_counts += 1
+print(eyre_counts)
+print(eyre_counts / len(eyre_lines))
+
+cristo_counts = 0
+for l in cristo_lines:
+    if '"' in l or '“' in l or '‘' in l: 
+        cristo_counts += 1
+print(cristo_counts)
+print(cristo_counts / len(cristo_lines))
+
+from collections import Counter
+
+stopwords = ["the", "to", "and", "of", "a", "her", "i", "in", "was", "it",
+             "she", "he", "be", "that", "you", "not", "had", "as", "his", "for",
+             "with", "is", "have", "but", "at", "so", "all", "my", "been", "him",
+             "on", "by", "could", "would", "very", "no", "what", "which", "they",
+             "were", "there", "me", "an", "must", "this", "said", "from", "or",
+             "will", "any", "much", "than", "such", "their", "them", "if", "do",
+             "did", "one", "when", "your", "more", "are", "we", "who", "up",
+             "out", "down", "into", "s", "t"]
+
+eyre_content = [w for w in eyre_words if w not in stopwords]
+cristo_content = [w for w in cristo_words if w not in stopwords]
+
+eyre_top10 = Counter(eyre_content).most_common(10)
+print(eyre_top10)
+
+cristo_top10 = Counter(cristo_content).most_common(10)
+print(cristo_top10)
+```
+
+```{python}
+import matplotlib.pyplot as plt
+
+plt.bar(["Jane Eyre", "Count of Monte Cristo"], [eyre_counts, cristo_counts])
+plt.title("Dialogue Comparison: Jane Eyre vs Count of Monte Cristo")
+plt.xlabel("Book")
+plt.ylabel("Dialogue Count")
+plt.xticks(rotation=45)
+plt.tight_layout()    # keeps the rotated labels from getting cut off
+plt.savefig("eyre_vs_cristo_dialogue.png")
+plt.show()
+
+jane_eyre_freqs = [pair[1] for pair in Counter(eyre_words).most_common()]
+jane_eyre_ranks = range(1, len(jane_eyre_freqs) + 1)    # 1, 2, 3, ... up to the number of words
+cristo_freqs = [pair[1] for pair in Counter(cristo_words).most_common()]
+cristo_ranks = range(1, len(cristo_freqs) + 1)
+
+plt.plot(jane_eyre_ranks, jane_eyre_freqs, label="Jane Eyre")
+plt.plot(cristo_ranks, cristo_freqs, label="Count of Monte Cristo")
+plt.title("Eyre vs Cristo (Word Frequency vs Rank)")
+plt.xlabel("Rank")
+plt.ylabel("Frequency")
+plt.xscale("log")
+plt.yscale("log")
+plt.legend()
+plt.savefig("zipf_eyre_vs_cristo_rank_frequency.png")
+plt.show()
+
+```
+
+The Verdict
+
+In Jane Eyre there is a lower amount of dialogue but a higher TTR. While the Count of Monte Cristo is the opposite. By looking at the top 10 words, I can see that Jane Eyre is about Jane and her life and interactions with Mr. Rochester. While the Count of Monte Cristo is placed in France. The top 10 words was the most helpful and the average word length was the least helpful. The top 10 words showed the style and themes of the books. While, the average word length was very similar between the two books and didn't tell much about the books. I would use the top 10 words to determine the author of a book because it shows the style of the book as well as possibly the names of the main characters. In both of my books, the top 10 words included the names of the main characters. 
