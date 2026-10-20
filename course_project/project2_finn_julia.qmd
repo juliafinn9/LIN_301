@@ -1,0 +1,10 @@
+```{python}
+
+with open("tyutchev_modern.txt", "r", encoding="utf-8") as f:
+    raw_text = f.read()
+print(raw_text[:500])
+
+with open("tyutchev_old.txt", "r", encoding="utf-8") as f:
+    raw_text = f.read()
+print(raw_text[:500])
+```
