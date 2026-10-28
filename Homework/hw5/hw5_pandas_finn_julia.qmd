@@ -1,0 +1,67 @@
+I got my Gilmore Girls TV script from Screen Genius
+
+```{python}
+import re
+
+with open("hw5_raw.txt", "r", encoding="utf-8") as f:
+    gilmore_lines = f.readlines()
+
+gilmore_cleaned = [line.strip() for line in gilmore_lines]
+gilmore_blanks = [line for line in gilmore_cleaned if line != ""]
+gilmore_blanks = [line for line in gilmore_blanks if not line.startswith("[")]
+gilmore_blanks = gilmore_blanks[1:]
+gilmore_clean = []
+speakers_list = []
+line_numbers = []
+count = 0
+for line in gilmore_blanks:
+    if "[" in line and "]" in line:
+        bracket_one = line.index("[")
+        bracket_two = line.index("]")
+        line = line[:bracket_one] + line[bracket_two+1:]
+    words = re.split(r"[\W]+", line)
+    words = [w for w in words if w != ""]
+    speakers_list.append(words[0])
+    words = words[1:]
+    line = " ".join(words)
+    gilmore_clean.append(line)
+    count += 1
+    line_numbers.append(count)
+
+print(gilmore_clean)
+```
+This code cleans the gilmore girls tv script. I opened the text file and read it as lines. Then I stripped all empty spaces and blanks. Line 11 gets rid of all scene transitions and line 12 removes the title from the script. Then I created empty lists for future use. The for loop removes all in-line cues in the text by looping through the lines and identifying lines that are encircled in brackets. I then used index to find the brackets. Then I sliced the line into before and after the brackets and then joined the line back together.  Lines 22 and 23 gets rid of punctution and empty spaces. The first word in each line was a character name so I appended first word/character name into speakers_list. Next, I made words = everything after the speaker names. In line 26, I recreated the line by joining all the words with a space character. Next, I appended the lines into gilmore clean = all cleaned lines. Then I used count to count the line numbers and then appended that count into line_numbers. 
+
+```{python}
+import pandas as pd
+
+line = gilmore_clean
+speaker = speakers_list
+line_number = line_numbers
+
+gilmore_rows = []
+
+for l, s, n in zip(line, speaker, line_number):
+    gilmore_rows.append({
+        "line": l,
+        "speaker": s,
+        "line_number": n,
+    })
+
+gilmore_df = pd.DataFrame(gilmore_rows)
+gilmore_df["length"] = [len(w) for w in gilmore_df["line"]]
+gilmore_df["is_rory"] = gilmore_df["line"].isin(["rory"])
+gilmore_df["lower"] = gilmore_df["line"].str.lower()
+
+print(gilmore_df)
+```
+At the beginning of the code, I created my variables for my data frame. After that, I created an empty list and appended my variables into it. I used zip so that everythibg will be lined up correctly. I then created a data frame and used the variables from my previous list as columns. I also created three new columns for the data frame: length of the line, if rory is present in the line, and the line lowercased.
+```{python}
+gilmore_df.to_csv("hw5_finn_julia.csv", index=False, encoding="utf-8-sig")
+check = pd.read_csv("hw5_finn_julia.csv")
+print(gilmore_df.head(10))
+```
+This code saves gilmore_df into an csv, reads it and prints the first ten rows.
+
+The speaker row stands for whoever is speaking a line, for example in the first line, Lorelei is speaking. This row only includes the speaker name, it throws out the rest of the line/dialogue that the person is speaking. This is because what the speaker says isn't relavent to wanting to know who the speaker is. In my new columns, I noticed that in my row is_rory it is rare for her name to actually be mentioned in the dialogue. 
+

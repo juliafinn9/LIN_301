@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>hw5_pandas_finn_julia</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="hw5_pandas_finn_julia_files/libs/clipboard/clipboard.min.js"></script>
+<script src="hw5_pandas_finn_julia_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="hw5_pandas_finn_julia_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="hw5_pandas_finn_julia_files/libs/quarto-html/popper.min.js"></script>
+<script src="hw5_pandas_finn_julia_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="hw5_pandas_finn_julia_files/libs/quarto-html/anchor.min.js"></script>
+<link href="hw5_pandas_finn_julia_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="hw5_pandas_finn_julia_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="hw5_pandas_finn_julia_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="hw5_pandas_finn_julia_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="hw5_pandas_finn_julia_files/libs/bootstrap/bootstrap-917079515d91bccb85b543faf8aa8bb6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+
+<p>I got my Gilmore Girls TV script from Screen Genius</p>
+<div id="455f8e2d" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"hw5_raw.txt"</span>, <span class="st">"r"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> f:</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    gilmore_lines <span class="op">=</span> f.readlines()</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>gilmore_cleaned <span class="op">=</span> [line.strip() <span class="cf">for</span> line <span class="kw">in</span> gilmore_lines]</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>gilmore_blanks <span class="op">=</span> [line <span class="cf">for</span> line <span class="kw">in</span> gilmore_cleaned <span class="cf">if</span> line <span class="op">!=</span> <span class="st">""</span>]</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>gilmore_blanks <span class="op">=</span> [line <span class="cf">for</span> line <span class="kw">in</span> gilmore_blanks <span class="cf">if</span> <span class="kw">not</span> line.startswith(<span class="st">"["</span>)]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>gilmore_blanks <span class="op">=</span> gilmore_blanks[<span class="dv">1</span>:]</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>gilmore_clean <span class="op">=</span> []</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>speakers_list <span class="op">=</span> []</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>line_numbers <span class="op">=</span> []</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>count <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> line <span class="kw">in</span> gilmore_blanks:</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">"["</span> <span class="kw">in</span> line <span class="kw">and</span> <span class="st">"]"</span> <span class="kw">in</span> line:</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        bracket_one <span class="op">=</span> line.index(<span class="st">"["</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        bracket_two <span class="op">=</span> line.index(<span class="st">"]"</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> line[:bracket_one] <span class="op">+</span> line[bracket_two<span class="op">+</span><span class="dv">1</span>:]</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    words <span class="op">=</span> re.split(<span class="vs">r"</span><span class="pp">[</span><span class="dv">\W</span><span class="pp">]</span><span class="op">+</span><span class="vs">"</span>, line)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    words <span class="op">=</span> [w <span class="cf">for</span> w <span class="kw">in</span> words <span class="cf">if</span> w <span class="op">!=</span> <span class="st">""</span>]</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    speakers_list.append(words[<span class="dv">0</span>])</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    words <span class="op">=</span> words[<span class="dv">1</span>:]</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    line <span class="op">=</span> <span class="st">" "</span>.join(words)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    gilmore_clean.append(line)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    count <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    line_numbers.append(count)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gilmore_clean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>['Please Luke Please please please', 'How many cups have you had this morning', 'None', 'Plus', 'Five but yours is better', 'You have a problem', 'Yes I do', 'Junkie', 'Angel You ve got wings baby', 'Luke s Yeah', 'You make that look really good', 'Oh it is really good It s the best coffee in town', 'Oh yeah I ll have to get a cup', 'Good plan', 'Yeah I ve never been here before Just uh passing through on my way to Hartford', 'You re a regular Jack Kerouac', 'Yeah', 'Yeah', 'Hey you mind if I sit down', 'Oh you know what Actually I m meeting someone so I', 'I m Joey', 'Okay', 'What you don t have a name', 'No I do have a name I just I m really meeting someone so', 'So I guess I should get going', 'So soon', 'What', 'I m just screwing with your mind Joey It s nice to meet you Enjoy Hartford', 'Enjoy your coffee mystery woman', 'Hm I like that', 'Hey It s freezing', 'Oh what do you need Hot tea coffee', 'Lip gloss', 'Aha', 'I have vanilla chocolate strawberry and toasted marshmallow', 'Anything in there not resembling a breakfast cereal', 'Yes', 'It has no smell but it changes colors with your mood', 'God RuPaul doesn t need this much makeup', 'Wow you re crabby', 'I m sorry I lost my Macy Gray CD and I need caffeine', 'Ooh I have your CD', 'Thief', 'Sorry and I will get you some coffee', 'What It s not for me It s for Rory I swear', 'You re shameless', 'Look Officer Krupke She s right at that table right over there', 'Ah He s got quite a pair this guy Thanks', 'Yeah I ve never been through here before', 'Oh you have too', 'Oh hi', 'Oh hi You really like my table don t you', 'I was just uh', 'Getting to know my daughter', 'Your', 'Are you my new daddy', 'Wow You do not look old enough to have a daughter No I mean it And you do not look like a daughter', 'That s possibly very sweet of you Thanks', 'So daughter You know I am traveling with a friend', 'She s sixteen', 'Bye', 'Drive safe', 'TO THE INDEPENDENCE INN', 'Oh here you go', 'Thanks', 'Independence Inn Michel speaking No I m sorry we re completely booked pause We have a wedding party here pause No there is really nothing I can do pause Yes I m sure pause Positive pause No I don t have to look ma am I pause Yes of course I ll look', 'No I m sorry we re completely booked', 'Oh no don t move Just ignore the tiny woman pushing the 200 pound instrument around No this is good I like this After this I ll uh bench press a piano huh Oh that s it lady tie your shoe now Yeah don t worry I ll wait', 'Hi Drella hi I was just wondering um could you be uh nicer to the guests', 'I m sorry Did you not want a harp player', 'Yes I did', 'And did you not want a great harp player', 'Yes I did', 'Okay I am a great harp player and this is my great harp okay So if you re looking for someone to just be nice to the guests get a harmonica player or maybe some guy who whistles through his nose Okay Capisce', 'Oh that is a great spot for a table Decorator s a genius', 'Madame you have no idea how desperately I d like to help but see I d have to build a room for you myself and I am not a man who works with his hands so the best I can do is suggest that you please please try for another weekend Any weekend Ah good fine the twenty first Hold on I ll look Michel leafs through the reservation book No I m sorry we re completely booked Michel looks at the phone as apparently the woman has hung up on him', 'Has the plumber attended to room four yet', 'He was here he did nothing it s a hundred dollars', 'Hi Marco Lorelai Talk to me about room four What was wrong with it', 'Uh huh I thought you replaced that already pause Well because you told me you did and I never forget anything so this one s on you right pause Pleasure doing business with you hangs up', 'What is your offspring doing', 'I need stamps Can I have these', 'No', 'Take them What s with the muumuu', 'Stop', 'No I m just saying you couldn t find one made of metal in case anyone has X ray eyes', 'And now we say goodbye', 'Ooh hey have Michel look at your French paper before you go', 'Excuse me', 'That d be great', 'No', 'Come on Michel I ll tell all the ladies what a stud you are', 'Hm I believe that memo has already been sent', 'Oh please Michel Pretty please with sucre on top I will stop talking like this', 'Leave it I ll look at it if I get a chance', 'It s due tomorrow And pay special attention to the grammar', 'I despise you', 'TO OUTSIDE', 'When are you going to let your parents know that you listen to the evil rock music You re an American teenager for God s sake', 'Rory if my parents still get upset over the obscene portion size of American food I seriously doubt I m gonna make any inroads with Eminem', 'I have to go to that', 'The hayride You re kidding', 'My parents set me up with the son of a business associate He s gonna be a doctor', 'How old is he', 'Sixteen', 'So he s gonna be a doctor in a hundred years', 'Well my parents like to plan ahead', 'God you have to go to the hayride with him', 'And his older brother', 'Oh now you re kidding', 'Koreans never joke about future doctors So I guess you re not going huh', 'No I m still fuzzy on what s fun about sitting in the cold for two hours with a bundle of sticks up your butt', 'Don t expect me to clear it up for you', 'TO CLASSROOM', 'TRAISTER For those of you who have not finished the final chapters of Huckleberry Finn you may use this time to do so For those of you who have you can start on your essay now Whichever task you choose do it silently', '1 Maybe it s a love letter', '2 Or her diary', '3 Could be a slam book', '4 It s the assignment', 'TO THE INDEPENDENCE INN', 'Nice huh', 'Beautiful', 'Yeah well tell it to the tip jar', 'Take Mrs Langworthy s bags up to 314 Make sure the drapes are closed and there s extra soap and she wants her pillow mints now', 'Sookie', 'I m okay I m okay', 'What did you do now Oh why aren t you watching her No estabas cuidandola', 'Eh no she s this bad food in the head', 'Oh I need you to be more careful', 'I know I m sorry Hey I fixed the peach sauce', 'That s blood you re bleeding Why are you bleeding', 'Oh my stitches opened I was using too much maple syrup It strangled the fruit', 'When did you get stitches', 'Friday night Radish roses', 'Okay stop moving', 'You gotta taste the sauce You have to try it while it s still warm', 'Okay Oh Sookie I need you to be more careful I need there to be fewer accidents', 'Yeah yeah yeah', 'Oh dear God Almighty That s incredible', 'I want to put it on the waffles tomorrow morning for breakfast', 'I want to take a bath in that sauce', 'I will make more', 'Someday when we open our own inn diabetics will line up to eat this sauce', 'Won t that be great', 'Yeah But the key to someday achieving that dream is for you to stay alive long enough so we can actually open an inn you understand', 'Yes I understand', 'All right So now let s get you up and to the doctor on three One two three', 'Ow', 'What', 'Stepped on my thumb I m fine On three Okay', 'TO OUTSIDE', 'Well was it a good color at least', 'It had sparkles in it', 'Wow', 'And it smelled like bubble gum when it dried', 'Oh well there s no way Mark Twain can compete with that', 'Mom we re home to Rory Did you hear something', 'I m not sure', 'Mom Are you here', 'KIM We re open Everything s half off', 'We have contact', 'Mom', 'KIM Lane', 'Mom', 'KIM Lane', 'Mom where are you', 'KIM Lane where are you', 'Back here', 'KIM Over here', 'I think she s that way', 'Are we closer', 'KIM I m by the table', 'She s kidding right', 'Look we ll meet you in the kitchen', 'KIM What', 'The kitchen', 'KIM Who s that', 'It s Rory Mom', 'KIM Oh', 'Wow I can hear the disappointment from here', 'Oh come on Stop it', 'You know it sucks that after all these years your mom still hates me', 'She doesn t hate you', 'She hates my mother', 'She doesn t trust unmarried women', 'You re unmarried', 'I m hayriding with a future proctologist I have potential', 'KIM Go upstairs Tea is ready I have muffins no dairy no sugar no wheat You have to soak them in tea to make them soft enough to bite but they re very healthy So how was school None of the girls get pregnant drop out', 'Not that we know of', 'Though come to think of it Joanna Posner was glowing a little', 'KIM What', 'Nothing Mama She s just kidding', 'KIM Boys don t like funny girls', 'Noted', 'Hello Anybody here', 'KIM We re here We re coming to the girls Have the muffins Made from sprouted wheat Only good 24 hours calls Everything s half off', 'Where are you', 'KIM Over here', 'Where', 'KIM By the chair', 'What chair', 'TO INDEPENDENCE INN KITCHEN', 'Careful', 'I m okay Peppers peppers peppers', 'Mike', 'Okay hello little vegetables come with me I got it Okay where s my glaze', 'In the counter', 'On the counter On not in not in the counter Okay good all right My sauce Whoo that s pretty good Hello a little bit of greens Okay okay Hello my little babies You like that A little bit of juice Okay You re very pretty Okay', 'Mike Mike', 'Sookie', 'Ooh It s here It happened She did it', 'Okay I m gonna need a little bit longer sentence', 'The Chilton school Rory got in', 'Oh my God Oh my God Oh my God', 'I know Look Dear Ms Gilmore We are happy to inform you that we have a vacancy at Chilton Preparatory starting immediately Due to your daughter s excellent credentials and your enthusiastic pursuit of her enrollment I offered to do the principal to get her in we would be happy to accept her as soon as the first semester s tuition has been received', 'This is very exciting', 'Is something burning', 'My bangs earlier Go on go on go on', 'This is it She can finally go to Harvard like she s always wanted and get the education that I never got and get to do all the things that I never got to do and then I can resent her for it and we can finally have a normal mother daughter relationship', 'Oh good', 'Mom', 'Oh', 'You re happy', 'Yeah', 'Did you do something slutty', 'I m not that happy', 'Here', 'What s going on', 'Open it', 'I m gonna be in a Britney Spears video', 'You re going to Chilton Oh sorry', 'Mom', 'You did it babe You got in', 'How did this happen You didn t with the principal did you', 'No honey that was a joke They have an open spot You re gonna start on Monday', 'Really', 'Really', 'I don t believe this Oh my God I m going to Chilton', 'Yeah', 'Sookie I m going to Chilton', 'I ll make cookies Protestants love oatmeal', 'I have to call Lane', 'I love you', 'I love you', 'My girl s going to Chilton', 'Yeah Rory s going to Chilton', 'Rory s going to Chilton Rory s going to Chilton Rory s going to Chilton', 'TO INDEPENDENCE INN LOBBY', 'Michel the phone', 'Mmhmm It rings', 'Can you answer it', 'No People are particularly stupid today I can t talk to any more of them', 'You know who s really nice to talk to The people at the unemployment agency', 'Independence Inn Michel speaking No I m sorry we re completely booked', 'TO LORELAI S HOUSE', 'I m holding for Miss Bell I ve been trying to get a hold of her all day Lorelai Gilmore pause Hi Oh hi hi Yeah uh my daughter Rory has just been accepted yay pause Thank you and um I got the invoice for your enrollment fee Wow that is a lot of zeros behind that five pause Uh huh Okay well I guess what I m wondering is if you couldn t take say part of it now just to get her going pause Well but she s supposed to start Monday It just doesn t give me a lot of time to pull a bank job pause Well never mind I was just kidding pause No a bank job is robbing a bank but pause Uh huh Oh no No no no I don t want you to give up her space I ll just I ll have to figure it out pause Okay No thank you It s been a real treat talking to you pause Yeah Bye bye', 'TO LORELAI S FRONT PORCH', 'What do I do What do I do What do I do', 'You can have anything I own My car Sell my car', 'Oh sweetie no one wants your car', 'Yeah', 'There s something I haven t thought of I know there is There s something out there staring me right in the face I just I haven t seen it', 'You know you might consider calling your par', 'No', 'But I don t think you have a', 'Stop', 'You can at least go and', 'Uh', 'Okay can I say one more thing I think it s your only option', 'Sookie there are several chapters from a Stephen King novel I d reenact before I d resort to that option', 'Okay dropped Dropped', 'Thank you', 'Mom So what do you think', 'Wow it makes you look smart', 'Okay no more wine for you Mom', 'You look like you were swallowed by a kilt', 'Fine you can hem it A little', 'Ooh', 'Only a little', 'Okay Or I could hem it a lot', 'No you re not I don t want it to be too short', 'I can t believe tomorrow s my last day at Stars Hollow High', 'I know', 'Today I was so excited I dressed for gym', 'You re kidding', 'And I played volleyball', 'With other people', 'And I learned that all this time I was avoiding group sports', 'Yeah', 'Was very smart because I suck at them', 'Well yeah you got that from me', 'Where s your paté', 'At Zsa Zsa Gabor s house', 'Right I m going to the store because you have nothing You feel like duck', 'Ooh if it s made with chicken absolutely', 'I ll be back', 'Bye', 'All right This will give you an idea Go see how you like it', 'Okay I love being a private school girl', 'TO ELDER GILMORE RESIDENCE', 'Hi Mom', 'Lorelai my goodness this is a surprise Is it Easter already', 'No I just uh finished up my business class and I thought I would stop by', 'To see me', 'Yes', 'Well isn t that nice Come in', 'Thanks', 'The place looks great', 'It hasn t changed', 'Well there you go How are the girls at the bridge club', 'Old', 'Well good', 'You said you were taking a business class', 'Yeah mmhmm yeah I m taking a business class at the college twice a week I m sure I told you', 'Well if you re sure then you must have Would you like some tea', 'I would love some coffee', 'Emily I m home', 'We re in here', 'Hi Dad', 'What is it Christmas already', 'Lorelai was taking a business class at the college today and decided to drop in to see us', 'What business class', 'Well she told us about it dear remember', 'No', 'Well actually I came here for a reason Dad would you mind sitting down for a minute', 'You need money', 'I have a situation', 'You need money', 'Dad will you just please let me get this out okay Um Rory has been accepted to Chilton', 'Chilton Oh that s a wonderful school It s only five minutes from here', 'That s right it is She can start as early as Monday Um the problem is that they want me to put down an enrollment fee plus the first semester s tuition and I have to do that immediately or she loses her spot', 'So you need money', 'Yeah But it s not for me it s for Rory And I fully intend to pay you back every cent I don t ask for favors you know that', 'Oh yes we know', 'I ll get the checkbook', 'Thank you You have no idea Thank you', 'On one condition', 'So close', 'Since we are now financially involved in your life I want to be actively involved in your life', 'What does that mean Mother', 'I want a weekly dinner', 'What', 'Friday nights you and Rory will have dinner here', 'Mom', 'And you have to call us once a week to give us an update on her schooling and your life That s it That s the condition If you agree you ll come to dinner tomorrow night and leave here with a check Otherwise I m sorry we can t help you', 'I don t want her to know that I borrowed money from you Can that just be between us', 'Does seven o clock work for you', 'Perfect', 'TO STARS HOLLOW HIGH', 'And we get to wear uniforms No more having people check you out to see what jeans you re wearing cause everyone s dressed alike in boring clothes and just there to learn', 'Okay there s academic minded and then there s Amish', 'Funny', 'Thank you So I told my mom you re changing schools', 'Was she thrilled', 'The party s on Friday I gotta go I have to have a pre hayride cup of tea with a future doctor How do I look Korean', 'Spitting image', 'Good Bye', 'Bye', 'God You re like Ruth Gordon just standing there with a tannis root Make a noise', 'Rosemary s Baby', 'Yeah', 'Well that s a great movie You ve got good taste Are you moving', 'No just my books are', 'My family just moved here from Chicago', 'Chicago Windy Oprah', 'Yeah Yeah that s the place I m Dean', 'Hi Oh Rory Me That s that s me', 'Rory', 'Well Lorelai technically', 'Lorelai I like that', 'It s my mother s name too She named me after herself She was lying in the hospital thinking about how men name boys after themselves all the time you know so why couldn t women She says her feminism just kind of took over Though personally I think a lot of Demerol also went into that decision I never talk this much', 'Well I better go', 'Oh sure', 'I have to go look for a job', 'Okay good', 'You should check with Miss Patty', 'What', 'About the job You should check with Miss Patty She teaches dance She was actually on Broadway once', 'I I don t really dance much', 'No no she just kind of knows everything that s going on in town She ll know if someone s looking', 'Oh great Uh thanks Hey what are you doing now', 'Nothing much I should throw this away at some point', 'Well maybe you could show me where this Miss Patty s place is', 'Yeah I guess so I really don t have anything important to let s go', 'So have you lived here all your life', 'Yes Well pretty much I was actually born in Hartford', 'Well that s not far', 'Thirty minutes with no traffic', 'Really', 'I timed it', 'Okay then', 'So do you like cake', 'What', 'They make really good cakes here They re very round', 'Okay I ll remember that', 'Good Make a note You wouldn t want to forget where the round cakes are', 'So how are you liking Moby Dick', 'Oh it s really good', 'Yeah', 'Yeah it s my first Melville', 'Cool', 'I mean I know it s kind of cliché to pick Moby Dick as your first Melville but hey how did you know I was reading Moby Dick', 'Uh well I ve been watching you', 'Watching me', 'I mean not in a creepy like I m watching you sort of way I just I ve noticed you', 'Me', 'Yeah', 'When', 'Every day After school you come out and you sit under that tree there and you read Last week it was Madame Bovary This week it s Moby Dick', 'But why would you', 'Because you re nice to look at and because you ve got unbelievable concentration', 'What', 'Last Friday these two guys were tossing around a ball and one guy nailed the other right in the face I mean it was a mess blood everywhere the nurse came out the place was in chaos his girlfriend was all freaking out and you just sat there and read I mean you never even looked up I thought I have never seen anyone read so intensely before in my entire life I have to meet that girl', 'Maybe I just didn t look up because I m unbelievably self centered', 'Maybe but I doubt it', 'So did I ask if you like cake', 'Yeah you did', 'Oh Cause they have really good cake back there', 'TO LUKE S DINER', 'So you were late getting home tonight', 'Yeah I went to the library', 'Oh Oh I forgot to tell you we re having dinner with your grandparents tomorrow night', 'We are', 'Mmhmm', 'But it s September', 'So', 'So what holiday s in September', 'Look it s not a holiday thing It s just dinner okay', 'Fine sorry', 'Red meat can kill you Enjoy', 'So I finished hemming your skirt today A grunt of acknowledgment might be nice', 'I don t understand why we re going to dinner tomorrow night I mean what if I had plans You didn t even ask me', 'Well if you had plans I would have known', 'How', 'Well you would have told me', 'I don t tell you everything I have my own things', 'Fine you have things', 'That s right I have things', 'Hey I had dibs on being the bitch tonight', 'Just tonight', 'What the hell is wrong with you', 'I m not sure I want to go to Chilton', 'What', 'The timing is just really bad', 'The timing is bad', 'And the bus ride to and from Hartford it s like thirty minutes each way', 'I can t believe what I m hearing', 'Plus I don t think we should be spending that money right now I mean I know Chilton s got to be costing you a lot', 'Oh you have no idea', 'All of your money should be going toward buying an inn with Sookie', 'What about college What about Harvard', 'We don t know that I can t get into Harvard if I stay where I am', 'Okay enough Enough of the crazy talk okay I appreciate your concern but I have this covered', 'I still don t want to go', 'Why', 'Because I don t', 'I have to get out of here', 'We have to pay first', 'PATTY One two three One two three One two three It s a waltz ladies Susie do you have to tinkle Then uncross your legs darling Oh Rory good I think I found a job for your male friend', 'What male friend', 'PATTY They need a stock boy at the supermarket I already talked to Taylor Doose about him You just send him around tomorrow', 'Okay thanks', 'What male friend', 'PATTY Oh he s very cute You have good taste', 'PATTY Hands in the air not in the nose', 'Oh you re gonna have to walk faster than that You re gonna have to turn into friggin Flo Jo to get away from me', 'TO LORELAI S HOUSE', 'This is about a boy of course I can t believe I didn t see it All this talk about money and bus rides You got a thing going with a guy and you don t want to leave school', 'I m going to bed', 'God I m so dense That should have been my first thought After all you re me', 'I m not you', 'Really Someone willing to throw important life experiences out the window to be with a guy It sounds like me to me', 'Whatever', 'So who is he', 'There s no guy', 'Dark hair romantic eyes Looks a little dangerous', 'This conversation is over', 'Tattoos are good too', 'I don t want to change schools because of all the reasons I ve already told you a thousand times If you don t want to believe me that s fine Goodnight', 'Does he have a motorcycle Cause if you re gonna throw your life away he better have a motorcycle', 'Well I think that went pretty well don t you', 'Thanks for the knock', 'Listen can we just start all over okay You tell me all about the guy and I promise not to let my head explode huh Rory please talk to me Okay I ll talk Don t get me wrong Guys are great I am a huge fan of guys You don t get knocked up at sixteen being indifferent to guys But babe guys are always going to be there This school isn t It s more important It has to be more important', 'I m going to sleep', 'Rory You ve always been the sensible one in this house huh I need you to remember that feeling now You will kick your own butt later if you blow this', 'Well it s my butt', 'Good comeback', 'Thank you', 'You re welcome Rory come on', 'I don t want to talk about this Could you please please just leave me alone', 'Okay fine We always had a democracy in this house We never did anything unless we both agreed But now I guess I m going to have to play the mom card You are going to Chilton whether you want to or not Monday morning you will be there end of story', 'We ll see', 'Yeah we will', 'TO INDEPENDENCE INN KITCHEN', 'I swear I don t know what happened', 'It s not important', 'I made that dish a hundred times It never exploded', 'Please forget it', 'Oh God I killed a Viking Oh you should fire me or make me pay the cost of a new stove out of my paycheck', 'Well whatever you want', 'I can t afford a new stove Those things are expensive', 'Sookie please I am begging you pull yourself together okay I got no sleep last night and I think I put my contacts in backwards', 'Rory s still mad at you huh', 'Hey I m not so crazy about her either', 'It was a fight Mothers and daughters fight', 'No we don t fight We never fight', 'You told me to tell you when your daughter arrived Well she s here and she s sitting in my chair', 'Hold on just a minute', 'And you are the one left standing That is a funny funny thing no', 'Hey no muumuu today You know what s weird I kind of miss it', 'You left me a note to meet you here', 'Yeah I thought you might want to work a couple hours make a little extra cash', 'Fine', 'Aw you re not gonna give me the Mommy Dearest treatment forever are ya', 'You wanted me here I m here Should I do something or what', 'Yeah go home Dinner s at seven Be ready to go', 'Fine', 'Fine', 'Ah my chair', 'TO ELDER GILMORE RESIDENCE', 'So do we go in or do we just stand here reenacting The Little Match Girl', 'Okay look I know you and me are having a thing here and I know you hate me but I need you to be civil at least through dinner and then on the way home you can pull a Menendez Deal', 'Fine', 'Hi Grandma', 'Well you re right on time', 'Yeah yeah no traffic at all', 'I can t tell you what a treat it is to have you girls here', 'Oh well we re excited too', 'Is that a collector s cup or can I throw it away for you', 'Oh', 'In the kitchen please So I want to hear all about Chilton', 'Well I haven t actually started yet', 'Richard look who s here', 'Rory You re tall', 'I guess', 'Well what s your height', '5 7', 'That s tall She s tall', 'Hi Dad', 'Lorelai your daughter s tall', 'Oh I know It s freakish We re thinking of having her studied at M I T', 'Ah', 'Champagne anyone', 'Oh that s fancy', 'Well it s not every day that I have my girls here for dinner on a day the banks are open A toast to Rory entering Chilton and an exciting new phase in her life', 'Here here', 'Mmm Well let s sit everyone This is just wonderful An education is the most important thing in the world next to family', 'And pie Joke joke', 'Ah', 'TO THE DINING ROOM', 'Rory how do you like the lamb', 'It s good', 'Too dry', 'No it s perfect', 'Potatoes could use a little salt though', 'Excuse me', 'So Grandpa how s the insurance biz', 'Oh people die we pay People crash cars we pay People lose a foot we pay', 'Well at least you have your new slogan', 'And how are things at the motel', 'The inn They re great', 'Lorelai s the executive manager now Isn t that wonderful', 'Speaking of which Christopher called yesterday', 'Speaking of which How is that a speaking of which', 'He s doing very well in California His Internet start up goes public next month This could mean big things for him Very talented man your father', 'She knows', 'He always was a smart one that boy You must take after him', 'Speaking of which I m gonna get a Coke Or a knife', 'Hi how are you doing', 'I think I m gonna go talk to her', 'No I ll go You stay and keep your grandfather company', 'Lorelai come back to the table', 'Is this what it s gonna be like every Friday night I come over and let the two of you attack me', 'You re being very dramatic', 'Dramatic Were you at that table just now', 'Yes I was and I think you took what your father said the wrong way', 'The wrong way How could I have taken it the wrong way What was open to interpretation', 'Keep your voice down', 'No Mother I can t take it anymore Tonight just seems like a nightmare', 'You re dripping all over the floor', 'Why do you pounce on every single thing I say', 'That s absurd You barely uttered a word all night', 'That s not true', 'You said pie', 'Oh come on', 'You did All I heard you say was pie', 'Why would he bring up Christopher Was that really necessary', 'He likes Christopher', 'Isn t that interesting Because as I remember when Christopher got me pregnant Dad didn t like him so much', 'Oh well please you were sixteen What were we supposed to do throw you a party We were disappointed The two of you had such bright futures', 'Yes And by not getting married we got to keep those bright futures', 'When you get pregnant you get married A child needs a mother and a father', 'Oh Mom Do you think that Christopher would have his own company right now if we d gotten married Do you think he would be anything at all', 'Yes I do Your father would have put him in the insurance business and you d be living a lovely life right now', 'He didn t want to be in the insurance business and I am living a lovely life right now', 'That s right far away from us', 'Oh here we go', 'You took that girl and completely shut us out of your life', 'You wanted to control me', 'You were still a child', 'I stopped being a child the minute the strip turned pink okay I had to figure out how to live I found a good job', 'As a maid With all your brains and talent', 'I worked my way up I run the place now I built a life on my own with no help from anyone', 'Yes and think of where you would have been if you d accepted a little help hmm And where Rory would have been But no you were always too proud to accept anything from anyone', 'Well I wasn t too proud to come here to you two begging for money for my kid s school was I', 'No you certainly weren t But you re too proud to let her know where you got it from aren t you Well fine you have your precious pride and I have my weekly dinners Isn t that nice We both win', 'TO OUTSIDE', 'Mom', 'I m okay I just do I look shorter Cause I feel shorter', 'Hey how bout I buy you a cup of coffee', 'Oh yeah You drive though okay cause I don t think my feet will reach the pedals', 'TO STARS HOLLOW', 'So nice dinner at the grandparents house', 'Oh yeah her dishes have never been cleaner', 'You and Grandma seemed to have a nice talk', 'How much did you hear', 'Not much You know snippets', 'Snippets', 'Little snippets', 'So basically everything', 'Basically yes', 'Well the best laid plans', 'I think it was really brave of you to ask them for money', 'Oh I so do not want to talk about it', 'How many meals is it gonna take til we re off the hook', 'I think the deli spread at my funeral will be the last one Hey wait does that mean', 'Can t let a perfectly good plaid skirt go to waste', 'Oh honey you won t be sorry', 'Wow you look nice Really nice', 'I had a meeting earlier at the bank They like collars You look nice too', 'I had a flagellation to go to', 'So what ll you have', 'Coffee in a vat', 'I ll have coffee also And chili fries', 'That s quite a refined palate you got there', 'Behold the healing powers of a bath So tell me about the guy', 'You know what s really special about our relationship The total understanding about the need for one s privacy I mean you really understand boundaries', 'So tell me about the guy', 'Mom', 'Is he dreamy', 'Oh that s so Nick at Night', 'Well I m gonna find out anyway', 'Really How', 'I ll spy', 'Coffee fries I can t stand it This is so unhealthy Rory please put down that cup of coffee You do not want to grow up to be like your mom', 'Sorry too late', 'So tell me about the guy', 'Check please', 'No really are you embarrassed to bring him home', 'I m not embarrassed', 'Does he talk at all', 'No Mom he s a mime']</code></pre>
+</div>
+</div>
+<p>This code cleans the gilmore girls tv script. I opened the text file and read it as lines. Then I stripped all empty spaces and blanks. Line 11 gets rid of all scene transitions and line 12 removes the title from the script. Then I created empty lists for future use. The for loop removes all in-line cues in the text by looping through the lines and identifying lines that are encircled in brackets. I then used index to find the brackets. Then I sliced the line into before and after the brackets and then joined the line back together. Lines 22 and 23 gets rid of punctution and empty spaces. The first word in each line was a character name so I appended first word/character name into speakers_list. Next, I made words = everything after the speaker names. In line 26, I recreated the line by joining all the words with a space character. Next, I appended the lines into gilmore clean = all cleaned lines. Then I used count to count the line numbers and then appended that count into line_numbers.</p>
+<div id="53c86816" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>line <span class="op">=</span> gilmore_clean</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>speaker <span class="op">=</span> speakers_list</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>line_number <span class="op">=</span> line_numbers</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>gilmore_rows <span class="op">=</span> []</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> l, s, n <span class="kw">in</span> <span class="bu">zip</span>(line, speaker, line_number):</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    gilmore_rows.append({</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"line"</span>: l,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"speaker"</span>: s,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"line_number"</span>: n,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>gilmore_df <span class="op">=</span> pd.DataFrame(gilmore_rows)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>gilmore_df[<span class="st">"length"</span>] <span class="op">=</span> [<span class="bu">len</span>(w) <span class="cf">for</span> w <span class="kw">in</span> gilmore_df[<span class="st">"line"</span>]]</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>gilmore_df[<span class="st">"is_rory"</span>] <span class="op">=</span> gilmore_df[<span class="st">"line"</span>].isin([<span class="st">"rory"</span>])</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>gilmore_df[<span class="st">"lower"</span>] <span class="op">=</span> gilmore_df[<span class="st">"line"</span>].<span class="bu">str</span>.lower()</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gilmore_df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                                line  speaker  line_number  \
+0                   Please Luke Please please please  LORELAI            1   
+1            How many cups have you had this morning     LUKE            2   
+2                                               None  LORELAI            3   
+3                                               Plus     LUKE            4   
+4                           Five but yours is better  LORELAI            5   
+..                                               ...      ...          ...   
+647                                     Check please     RORY          648   
+648  No really are you embarrassed to bring him home  LORELAI          649   
+649                              I m not embarrassed     RORY          650   
+650                              Does he talk at all  LORELAI          651   
+651                               No Mom he s a mime     RORY          652   
+
+     length  is_rory                                            lower  
+0        32    False                 please luke please please please  
+1        39    False          how many cups have you had this morning  
+2         4    False                                             none  
+3         4    False                                             plus  
+4        24    False                         five but yours is better  
+..      ...      ...                                              ...  
+647      12    False                                     check please  
+648      47    False  no really are you embarrassed to bring him home  
+649      19    False                              i m not embarrassed  
+650      19    False                              does he talk at all  
+651      18    False                               no mom he s a mime  
+
+[652 rows x 6 columns]</code></pre>
+</div>
+</div>
+<p>At the beginning of the code, I created my variables for my data frame. After that, I created an empty list and appended my variables into it. I used zip so that everythibg will be lined up correctly. I then created a data frame and used the variables from my previous list as columns. I also created three new columns for the data frame: length of the line, if rory is present in the line, and the line lowercased.</p>
+<div id="20b8058b" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>gilmore_df.to_csv(<span class="st">"hw5_finn_julia.csv"</span>, index<span class="op">=</span><span class="va">False</span>, encoding<span class="op">=</span><span class="st">"utf-8-sig"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>check <span class="op">=</span> pd.read_csv(<span class="st">"hw5_finn_julia.csv"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gilmore_df.head(<span class="dv">10</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                      line  speaker  line_number  length  \
+0         Please Luke Please please please  LORELAI            1      32   
+1  How many cups have you had this morning     LUKE            2      39   
+2                                     None  LORELAI            3       4   
+3                                     Plus     LUKE            4       4   
+4                 Five but yours is better  LORELAI            5      24   
+5                       You have a problem     LUKE            6      18   
+6                                 Yes I do  LORELAI            7       8   
+7                                   Junkie     LUKE            8       6   
+8              Angel You ve got wings baby  LORELAI            9      27   
+9                              Luke s Yeah     LUKE           10      11   
+
+   is_rory                                    lower  
+0    False         please luke please please please  
+1    False  how many cups have you had this morning  
+2    False                                     none  
+3    False                                     plus  
+4    False                 five but yours is better  
+5    False                       you have a problem  
+6    False                                 yes i do  
+7    False                                   junkie  
+8    False              angel you ve got wings baby  
+9    False                              luke s yeah  </code></pre>
+</div>
+</div>
+<p>This code saves gilmore_df into an csv, reads it and prints the first ten rows.</p>
+<p>The speaker row stands for whoever is speaking a line, for example in the first line, Lorelei is speaking. This row only includes the speaker name, it throws out the rest of the line/dialogue that the person is speaking. This is because what the speaker says isn’t relavent to wanting to know who the speaker is. In my new columns, I noticed that in my row is_rory it is rare for her name to actually be mentioned in the dialogue.</p>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

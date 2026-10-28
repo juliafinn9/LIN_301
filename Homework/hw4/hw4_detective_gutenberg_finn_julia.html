@@ -88,7 +88,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<div id="17d623bc" class="cell" data-execution_count="1">
+<div id="2e9cf3c2" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../../data/gutenberg/jane_eyre.txt"</span>, <span class="st">"r"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> f:</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>        eyre_lines <span class="op">=</span> f.readlines()</span>
@@ -127,7 +127,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>cristo_words <span class="op">=</span> re.split(<span class="vs">r"</span><span class="pp">[</span><span class="dv">\W</span><span class="pp">]</span><span class="op">+</span><span class="vs">"</span>, cristo_text.lower())</span>
 <span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>cristo_words <span class="op">=</span> [w <span class="cf">for</span> w <span class="kw">in</span> cristo_words <span class="cf">if</span> w <span class="op">!=</span> <span class="st">""</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="31961413" class="cell" data-execution_count="2">
+<div id="3d07c343" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>eyre_ttr <span class="op">=</span> <span class="bu">len</span>(<span class="bu">set</span>(eyre_words)) <span class="op">/</span> <span class="bu">len</span>(eyre_words)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>cristo_ttr <span class="op">=</span> <span class="bu">len</span>(<span class="bu">set</span>(cristo_words)) <span class="op">/</span> <span class="bu">len</span>(cristo_words)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(eyre_ttr, cristo_ttr)</span>
@@ -155,7 +155,7 @@ Cristo Average Word Length: 4.333346153270901
 Eyre Average Word Length: 4.163959436417482</code></pre>
 </div>
 </div>
-<div id="e0724fb6" class="cell" data-execution_count="3">
+<div id="8ff7d45a" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> word <span class="kw">in</span> eyre_words: </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> word.endswith(<span class="st">"ly"</span>):</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(word)</span>
@@ -9140,7 +9140,7 @@ properly
 [('then', 1729), ('count', 1487), ('man', 1413), ('monte', 1135), ('cristo', 1128), ('m', 1103), ('villefort', 1090), ('de', 1044), ('has', 1034), ('well', 992)]</code></pre>
 </div>
 </div>
-<div id="3f9c8d07" class="cell" data-execution_count="4">
+<div id="2486cf76" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>plt.bar([<span class="st">"Jane Eyre"</span>, <span class="st">"Count of Monte Cristo"</span>], [eyre_counts, cristo_counts])</span>
