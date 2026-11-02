@@ -64,7 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="project2_finn_julia_files/libs/clipboard/clipboard.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="project2_finn_julia_files/libs/clipboard/clipboard.min.js"></script>
 <script src="project2_finn_julia_files/libs/quarto-html/quarto.js" type="module"></script>
 <script src="project2_finn_julia_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="project2_finn_julia_files/libs/quarto-html/popper.min.js"></script>
@@ -75,6 +75,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="project2_finn_julia_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="project2_finn_julia_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="project2_finn_julia_files/libs/bootstrap/bootstrap-917079515d91bccb85b543faf8aa8bb6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -88,60 +91,269 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<div id="e36a46c3" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"tyutchev_modern.txt"</span>, <span class="st">"r"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> f:</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    raw_text <span class="op">=</span> f.read()</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(raw_text[:<span class="dv">500</span>])</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"tyutchev_old.txt"</span>, <span class="st">"r"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> f:</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    raw_text <span class="op">=</span> f.read()</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(raw_text[:<span class="dv">500</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="a1e982b4" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"tyutchev_modern.txt"</span>, <span class="st">"r"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> f:</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    modern_text <span class="op">=</span> f.read()</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"tyutchev_old.txt"</span>, <span class="st">"r"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> f:</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    old_text <span class="op">=</span> f.read()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This code opens my two text files containing Russian poems.</p>
+<div id="2234f207" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>title_split <span class="op">=</span> old_text.split(<span class="st">"==="</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>title_split <span class="op">=</span> [t.strip() <span class="cf">for</span> t <span class="kw">in</span> title_split <span class="cf">if</span> t <span class="op">!=</span> <span class="st">""</span>]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>poem_dict <span class="op">=</span> {}</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>poem_name <span class="op">=</span> <span class="st">""</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> title_split:</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> t <span class="op">==</span> t.upper():</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        poem_name <span class="op">=</span> t</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        poem_dict[poem_name] <span class="op">=</span> <span class="st">""</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        poem_dict[poem_name] <span class="op">+=</span> t</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>old_words <span class="op">=</span> []</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>poems_cleaned <span class="op">=</span> {}</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> poem_name, poem_text <span class="kw">in</span> poem_dict.items():</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    poems_cleaned[poem_name] <span class="op">=</span> re.split(<span class="vs">r"</span><span class="pp">[</span><span class="dv">\W</span><span class="pp">]</span><span class="op">+</span><span class="vs">"</span>, poem_text.lower())</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    poems_cleaned[poem_name] <span class="op">=</span> [w <span class="cf">for</span> w <span class="kw">in</span> poems_cleaned[poem_name] <span class="cf">if</span> w <span class="op">!=</span> <span class="st">""</span>]</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    old_words <span class="op">+=</span> poems_cleaned[poem_name]</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(old_words)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>=== НАПОЛЕОН ===
-
-Сын Революции, ты с матерью ужасной
-Отважно в бой вступил — и изнемог в борьбе…
-Не одолел ее твой гений самовластный!..
-Бой невозможный, труд напрасный!..
-Ты всю ее носил в самом себе…
-
-Два демона ему служили,
-Две силы чудно в нем слились:
-В его главе — орлы парили,
-В его груди — змии вились…
-Ширококрылых вдохновений
-Орлиный, дерзостный полет,
-И в самом буйстве дерзновений
-Змеиной мудрости расчет.
-Но освящающая сила,
-Непостижимая уму,
-Души его не озарила
-И не приблизилась к нем
-=== НАПОЛЕОН ===
-
-3
-
-Два демона ему служили,
-Двѣ силы чудно въ немъ слились:
-Въ его главѣ орлы парили,
-Въ его груди змѣи вились…
-Ширококрылыхъ вдохновеній
-Орлиный, дерзостный полетъ,
-И въ самомъ буйствѣ дерзновеній
-Змѣиной мудрости расчетъ!
-Но освѣщающая сила,
-Непостижимая уму,
-Души его не озарила
-И не приблизилась къ нему.
-Онъ былъ земной, не Божій пламень!
-Онъ гордо плылъ презритель волнъ!
-Но о подводный вѣры камень
-Въ щепы разбился утлый чолнъ…
-
-И ты стоялъ,—передъ тобой Россія!
-И вѣщій волхв</code></pre>
+<pre><code>['сынъ', 'революціи', 'ты', 'съ', 'матерью', 'ужасной', 'отважно', 'въ', 'бой', 'вступилъ', 'и', 'изнемогъ', 'въ', 'борьбѣ', 'не', 'одолѣлъ', 'ея', 'твой', 'геній', 'самовластный', 'бой', 'невозможный', 'трудъ', 'напрасный', 'ты', 'всю', 'ее', 'носилъ', 'въ', 'самомъ', 'себѣ', 'два', 'демона', 'ему', 'служили', 'двѣ', 'силы', 'чудно', 'въ', 'немъ', 'слились', 'въ', 'его', 'главѣ', 'орлы', 'парили', 'въ', 'его', 'груди', 'змѣи', 'вились', 'ширококрылыхъ', 'вдохновеній', 'орлиный', 'дерзостный', 'полетъ', 'и', 'въ', 'самомъ', 'буйствѣ', 'дерзновеній', 'змѣиной', 'мудрости', 'расчетъ', 'но', 'освѣщающая', 'сила', 'непостижимая', 'уму', 'души', 'его', 'не', 'озарила', 'и', 'не', 'приблизилась', 'къ', 'нему', 'онъ', 'былъ', 'земной', 'не', 'божій', 'пламень', 'онъ', 'гордо', 'плылъ', 'презритель', 'волнъ', 'но', 'о', 'подводный', 'вѣры', 'камень', 'въ', 'щепы', 'разбился', 'утлый', 'чолнъ', 'и', 'ты', 'стоялъ', 'передъ', 'тобой', 'россія', 'и', 'вѣщій', 'волхвъ', 'въ', 'предчувствіи', 'борьбы', 'ты', 'самъ', 'слова', 'промолвилъ', 'роковыя', 'да', 'сбудутся', 'ея', 'судьбы', 'и', 'не', 'напрасно', 'было', 'заклинанье', 'судьба', 'откликнулась', 'на', 'голосъ', 'твой', 'но', 'новою', 'загадкою', 'въ', 'изгнаньѣ', 'ты', 'возразилъ', 'на', 'отзывъ', 'роковой', 'года', 'прошли', 'и', 'вотъ', 'изъ', 'ссылки', 'тѣсной', 'на', 'родину', 'вернувшійся', 'мертвецъ', 'на', 'берегахъ', 'рѣки', 'тебѣ', 'любезной', 'тревожный', 'духъ', 'почилъ', 'ты', 'наконецъ', 'но', 'чутокъ', 'сонъ', 'и', 'по', 'ночамъ', 'тоскуя', 'порою', 'вставъ', 'ты', 'смотришь', 'на', 'востокъ', 'и', 'вдругъ', 'смутясь', 'бѣжишь', 'какъ', 'бы', 'почуя', 'передразсвѣтный', 'вѣтерокъ', 'царь', 'благодушный', 'царь', 'съ', 'евангельской', 'душою', 'съ', 'любовью', 'къ', 'ближнему', 'святою', 'принять', 'державный', 'удостой', 'гимнъ', 'благодарности', 'простой', 'ты', 'обнимающій', 'любовію', 'своей', 'не', 'сотни', 'тысячи', 'людей', 'ты', 'днесь', 'воскрыльями', 'ея', 'благоволилъ', 'покрыть', 'и', 'бѣднаго', 'меня', 'не', 'заявившаго', 'ничѣмъ', 'себя', 'и', 'не', 'имѣвшаго', 'на', 'царское', 'вниманье', 'другого', 'права', 'какъ', 'свое', 'страданье', 'вниманьемъ', 'благостнымъ', 'своимъ', 'меня', 'призрѣть', 'ты', 'удостоилъ', 'и', 'духъ', 'мой', 'ободрилъ', 'и', 'успокоилъ', 'о', 'будь', 'же', 'царь', 'прославленъ', 'и', 'хвалимъ', 'но', 'не', 'какъ', 'царь', 'а', 'какъ', 'намѣстникъ', 'бога', 'склоняющаго', 'слухъ', 'не', 'только', 'къ', 'свѣтлымъ', 'легіонамъ', 'избранниковъ', 'своихъ', 'небесныхъ', 'слугъ', 'но', 'и', 'къ', 'отдѣльнымъ', 'одинокимъ', 'стонамъ', 'существъ', 'затерянныхъ', 'на', 'сей', 'землѣ', 'и', 'внемлющаго', 'ихъ', 'молитвенной', 'хвалѣ', 'чего', 'же', 'царь', 'тебѣ', 'мы', 'пожелаемъ', 'торжествъ', 'ли', 'громкихъ', 'и', 'побѣдъ', 'отъ', 'нихъ', 'тебѣ', 'большой', 'отрады', 'нѣтъ', 'мы', 'лучшаго', 'тебѣ', 'желаемъ', 'а', 'именно', 'чтобы', 'по', 'мѣрѣ', 'той', 'какъ', 'призванъ', 'волей', 'ты', 'святой', 'здѣсь', 'дѣйствовать', 'въ', 'печальной', 'сей', 'юдолѣ', 'ты', 'сознаваемъ', 'былъ', 'все', 'болѣе', 'и', 'болѣ', 'такимъ', 'каковъ', 'ты', 'есть', 'какъ', 'другъ', 'добра', 'нелицемѣрный', 'вотъ', 'образъ', 'твой', 'и', 'правильный', 'и', 'вѣрный', 'вотъ', 'слава', 'лучшая', 'для', 'насъ', 'и', 'честь', 'молчитъ', 'сомнительно', 'востокъ', 'повсюду', 'чуткое', 'молчанье', 'что', 'это', 'сонъ', 'иль', 'ожиданье', 'и', 'близокъ', 'день', 'или', 'далекъ', 'чуть', 'чуть', 'бѣлѣетъ', 'темя', 'горъ', 'еще', 'въ', 'туманѣ', 'лѣсъ', 'и', 'долы', 'спятъ', 'города', 'и', 'дремлютъ', 'селы', 'но', 'къ', 'небу', 'подымите', 'взоръ', 'смотрите', 'полоса', 'видна', 'и', 'словно', 'скрытной', 'страстью', 'рдѣя', 'она', 'все', 'ярче', 'все', 'живѣе', 'вся', 'разгорается', 'она', 'еще', 'минута', 'и', 'во', 'всей', 'неизмѣримости', 'эѳирной', 'раздастся', 'благовѣстъ', 'всемірный', 'побѣдныхъ', 'солнечныхъ', 'лучей']</code></pre>
 </div>
 </div>
+<p>This code splits the old poems into individual words and removes blank spaces as well as non-word characters. I built dictionaries and then used those to store the poem titles and their corresponding text. Then I combined them at the end to get the cleaned words of the entire text.</p>
+<div id="8bca6a49" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>title_split <span class="op">=</span> modern_text.split(<span class="st">"==="</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>title_split <span class="op">=</span> [t.strip() <span class="cf">for</span> t <span class="kw">in</span> title_split <span class="cf">if</span> t <span class="op">!=</span> <span class="st">""</span>]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>poem_dict <span class="op">=</span> {}</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>poem_name <span class="op">=</span> <span class="st">""</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> title_split:</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> t <span class="op">==</span> t.upper():</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        poem_name <span class="op">=</span> t</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        poem_dict[poem_name] <span class="op">=</span> <span class="st">""</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        poem_dict[poem_name] <span class="op">+=</span> t</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>modern_words <span class="op">=</span> []</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>m_poems_cleaned <span class="op">=</span> {}</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> poem_name, poem_text <span class="kw">in</span> poem_dict.items():</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    m_poems_cleaned[poem_name] <span class="op">=</span> re.split(<span class="vs">r"</span><span class="pp">[</span><span class="dv">\W</span><span class="pp">]</span><span class="op">+</span><span class="vs">"</span>, poem_text.lower())</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    m_poems_cleaned[poem_name] <span class="op">=</span> [w <span class="cf">for</span> w <span class="kw">in</span> m_poems_cleaned[poem_name] <span class="cf">if</span> w <span class="op">!=</span> <span class="st">""</span>]</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    modern_words <span class="op">+=</span> m_poems_cleaned[poem_name]</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(modern_words)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>['сын', 'революции', 'ты', 'с', 'матерью', 'ужасной', 'отважно', 'в', 'бой', 'вступил', 'и', 'изнемог', 'в', 'борьбе', 'не', 'одолел', 'ее', 'твой', 'гений', 'самовластный', 'бой', 'невозможный', 'труд', 'напрасный', 'ты', 'всю', 'ее', 'носил', 'в', 'самом', 'себе', 'два', 'демона', 'ему', 'служили', 'две', 'силы', 'чудно', 'в', 'нем', 'слились', 'в', 'его', 'главе', 'орлы', 'парили', 'в', 'его', 'груди', 'змии', 'вились', 'ширококрылых', 'вдохновений', 'орлиный', 'дерзостный', 'полет', 'и', 'в', 'самом', 'буйстве', 'дерзновений', 'змеиной', 'мудрости', 'расчет', 'но', 'освящающая', 'сила', 'непостижимая', 'уму', 'души', 'его', 'не', 'озарила', 'и', 'не', 'приблизилась', 'к', 'нему', 'он', 'был', 'земной', 'не', 'божий', 'пламень', 'он', 'гордо', 'плыл', 'презритель', 'волн', 'но', 'о', 'подводный', 'веры', 'камень', 'в', 'щепы', 'разбился', 'утлый', 'челн', 'и', 'ты', 'стоял', 'перед', 'тобой', 'россия', 'и', 'вещий', 'волхв', 'в', 'предчувствии', 'борьбы', 'ты', 'сам', 'слова', 'промолвил', 'роковые', 'да', 'сбудутся', 'ее', 'судьбы', 'и', 'не', 'напрасно', 'было', 'заклинанье', 'судьбы', 'откликнулись', 'на', 'голос', 'твой', 'но', 'новою', 'загадкою', 'в', 'изгнанье', 'ты', 'возразил', 'на', 'отзыв', 'роковой', 'года', 'прошли', 'и', 'вот', 'из', 'ссылки', 'тесной', 'на', 'родину', 'вернувшийся', 'мертвец', 'на', 'берегах', 'реки', 'тебе', 'любезной', 'тревожный', 'дух', 'почил', 'ты', 'наконец', 'но', 'чуток', 'сон', 'и', 'по', 'ночам', 'тоскуя', 'порою', 'встав', 'ты', 'смотришь', 'на', 'восток', 'и', 'вдруг', 'смутясь', 'бежишь', 'как', 'бы', 'почуя', 'передрассветный', 'ветерок', 'царь', 'благодушный', 'царь', 'с', 'евангельской', 'душою', 'с', 'любовью', 'к', 'ближнему', 'святою', 'принять', 'державный', 'удостой', 'гимн', 'благодарности', 'простой', 'ты', 'обнимающий', 'любовию', 'своей', 'не', 'сотни', 'тысячи', 'людей', 'ты', 'днесь', 'воскрыльями', 'ея', 'благоволил', 'покрыть', 'и', 'бедного', 'меня', 'не', 'заявившего', 'ничем', 'себя', 'и', 'не', 'имевшего', 'на', 'царское', 'вниманье', 'другого', 'права', 'как', 'свое', 'страданье', 'вниманьем', 'благостным', 'своим', 'меня', 'призреть', 'ты', 'удостоил', 'и', 'дух', 'мой', 'ободрил', 'и', 'успокоил', 'о', 'будь', 'же', 'царь', 'прославлен', 'и', 'хвалим', 'но', 'не', 'как', 'царь', 'а', 'как', 'наместник', 'бога', 'склоняющего', 'слух', 'не', 'только', 'к', 'светлым', 'легионам', 'избранников', 'своих', 'небесных', 'слуг', 'но', 'и', 'к', 'отдельным', 'одиноким', 'стонам', 'существ', 'затерянных', 'на', 'сей', 'земле', 'и', 'внемлющего', 'их', 'молитвенной', 'хвале', 'чего', 'же', 'царь', 'тебе', 'мы', 'пожелаем', 'торжеств', 'ли', 'громких', 'и', 'побед', 'от', 'них', 'тебе', 'большой', 'отрады', 'нет', 'мы', 'лучшего', 'тебе', 'желаем', 'а', 'именно', 'чтобы', 'по', 'мере', 'той', 'как', 'призван', 'волей', 'ты', 'святой', 'здесь', 'действовать', 'в', 'печальной', 'сей', 'юдоли', 'ты', 'сознаваем', 'был', 'все', 'более', 'и', 'боле', 'таким', 'каков', 'ты', 'есть', 'как', 'друг', 'добра', 'нелицемерный', 'вот', 'образ', 'твой', 'и', 'правильный', 'и', 'верный', 'вот', 'слава', 'лучшая', 'для', 'нас', 'и', 'честь', 'молчит', 'сомнительно', 'восток', 'повсюду', 'чуткое', 'молчанье', 'что', 'это', 'сон', 'иль', 'ожиданье', 'и', 'близок', 'день', 'или', 'далек', 'чуть', 'чуть', 'белеет', 'темя', 'гор', 'еще', 'в', 'тумане', 'лес', 'и', 'долы', 'спят', 'города', 'и', 'дремлют', 'селы', 'но', 'к', 'небу', 'подымите', 'взор', 'смотрите', 'полоса', 'видна', 'и', 'словно', 'скрытной', 'страстью', 'рдея', 'она', 'все', 'ярче', 'все', 'живее', 'вся', 'разгорается', 'она', 'еще', 'минута', 'и', 'во', 'всей', 'неизмеримости', 'эфирной', 'раздастся', 'благовест', 'всемирный', 'победных', 'солнечных', 'лучей']</code></pre>
+</div>
+</div>
+<p>This code splits the modern poems into individual words and removes blank spaces as well as non-word characters. I built dictionaries and then used those to store the poem titles and their corresponding text. Then I combined them at the end to get the cleaned words of the entire text.</p>
+<div id="45a8a773" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(old_words[:<span class="dv">20</span>])</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(old_words[<span class="op">-</span><span class="dv">20</span>:])</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(modern_words[:<span class="dv">20</span>])</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(modern_words[<span class="op">-</span><span class="dv">20</span>:])</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>modern_length <span class="op">=</span> <span class="bu">len</span>(modern_words)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>old_length <span class="op">=</span> <span class="bu">len</span>(old_words)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(modern_length)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(old_length)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>['сынъ', 'революціи', 'ты', 'съ', 'матерью', 'ужасной', 'отважно', 'въ', 'бой', 'вступилъ', 'и', 'изнемогъ', 'въ', 'борьбѣ', 'не', 'одолѣлъ', 'ея', 'твой', 'геній', 'самовластный']
+['все', 'ярче', 'все', 'живѣе', 'вся', 'разгорается', 'она', 'еще', 'минута', 'и', 'во', 'всей', 'неизмѣримости', 'эѳирной', 'раздастся', 'благовѣстъ', 'всемірный', 'побѣдныхъ', 'солнечныхъ', 'лучей']
+['сын', 'революции', 'ты', 'с', 'матерью', 'ужасной', 'отважно', 'в', 'бой', 'вступил', 'и', 'изнемог', 'в', 'борьбе', 'не', 'одолел', 'ее', 'твой', 'гений', 'самовластный']
+['все', 'ярче', 'все', 'живее', 'вся', 'разгорается', 'она', 'еще', 'минута', 'и', 'во', 'всей', 'неизмеримости', 'эфирной', 'раздастся', 'благовест', 'всемирный', 'победных', 'солнечных', 'лучей']
+420
+420</code></pre>
+</div>
+</div>
+<p>This code prints the first and last 20 words of the old and modern text. It also prints the length of each text.</p>
+<div id="cfa11c00" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>old_rows <span class="op">=</span> []</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> w <span class="kw">in</span> old_words:</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    old_rows.append({<span class="st">"word"</span>: w})</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>old_df <span class="op">=</span> pd.DataFrame(old_rows)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(old_df))</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(old_df.head(<span class="dv">10</span>))</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(old_df.tail(<span class="dv">10</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>420
+        word
+0       сынъ
+1  революціи
+2         ты
+3         съ
+4    матерью
+5    ужасной
+6    отважно
+7         въ
+8        бой
+9   вступилъ
+              word
+410             во
+411           всей
+412  неизмѣримости
+413        эѳирной
+414      раздастся
+415     благовѣстъ
+416      всемірный
+417      побѣдныхъ
+418     солнечныхъ
+419          лучей</code></pre>
+</div>
+</div>
+<p>This code creates a DataFrame for the words in the old text. It prints the length of the DataFrame as well as the first and last 10 rows.</p>
+<div id="9cc16d6a" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>modern_rows <span class="op">=</span> []</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> w <span class="kw">in</span> modern_words:</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    modern_rows.append({<span class="st">"word"</span>: w})</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>modern_df <span class="op">=</span> pd.DataFrame(modern_rows)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(modern_df))</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(modern_df.head(<span class="dv">10</span>))</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(modern_df.tail(<span class="dv">10</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>420
+        word
+0        сын
+1  революции
+2         ты
+3          с
+4    матерью
+5    ужасной
+6    отважно
+7          в
+8        бой
+9    вступил
+              word
+410             во
+411           всей
+412  неизмеримости
+413        эфирной
+414      раздастся
+415      благовест
+416      всемирный
+417       победных
+418      солнечных
+419          лучей</code></pre>
+</div>
+</div>
+<p>This code creates a DataFrame for the words in the modern text. It prints the length of the DataFrame as well as the first and last 10 rows.</p>
+<div id="80c2ad30" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>old_df.to_csv(<span class="st">"project2_finn_julia_old.csv"</span>, index<span class="op">=</span><span class="va">False</span>, encoding<span class="op">=</span><span class="st">"utf-8-sig"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>modern_df.to_csv(<span class="st">"project2_finn_julia_modern.csv"</span>, index<span class="op">=</span><span class="va">False</span>, encoding<span class="op">=</span><span class="st">"utf-8-sig"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This code saves the DataFrames to CSV files.</p>
+<div id="eec3de91" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>check1 <span class="op">=</span> pd.read_csv(<span class="st">"project2_finn_julia_old.csv"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(old_df), <span class="bu">len</span>(check1))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>check1.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>420 420</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">word</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>сынъ</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>революціи</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>ты</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>съ</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>матерью</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>This code reads the saved old text CSV file and prints the length of it as well as the first few rows.</p>
+<div id="26a4f709" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>check2 <span class="op">=</span> pd.read_csv(<span class="st">"project2_finn_julia_modern.csv"</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(modern_df), <span class="bu">len</span>(check2))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>check2.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>420 420</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">word</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>сын</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>революции</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>ты</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>с</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>матерью</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>This code reads the saved modern text CSV file and prints the length of it as well as the first few rows.</p>
+<p>I used AI to help brainstorm how to store the poems names and their corresponding text. I also used AI auto-complete in VS code when copying the same code and changing the variable names.</p>
+<ol type="1">
+<li><p>The Raw Data My raw data is composed of two text files that each contain three poems by Tyutchev. I used ChatGPT to create the text files. I did not change my dataset from Component 1. https://github.com/juliafinn9/LIN_301/blob/main/course_project/project1_finn_julia.qmd</p></li>
+<li><p>Cleaning Steps</p></li>
+</ol>
+<p>When I cleaned my data, I first split my text from the titles of the poems. Then I split the text and removed white space as well as non-word characters. After that, I lowercased my data. Finally, I removed all empty strings. I lowercased the text, which I believe will make the data a lot easier to analyze. However, it cost me being able to see what word each line starts with. However, if this becomes a problem later on, I can adjust my code.</p>
+<ol start="3" type="1">
+<li><p>The Clean Table I created two tables for each text file. In my DataFrame, I created a row that gives the number of order of each word in the text. The column I made gives each word in the text. There are 420 rows in each table (420 words in each text file, excluding title names)</p></li>
+<li><p>Still Messy</p></li>
+</ol>
+<p>When I created these text files from ChatGPT, I didn’t notice that the diacritics above a specific letter wasn’t included. I noticed this as I was looking through my data during this project. Before Component 3, I need to go and look back at the original source that ChatGPT got the poems from and see if the diacritics were included. If they were, I will need to figure out how to address that problem. There is nothing in my data, that I wish I had kept.</p>
 
 </main>
 <!-- /main column -->

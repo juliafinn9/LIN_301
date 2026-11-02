@@ -1,10 +1,128 @@
 ```{python}
+import re
 
 with open("tyutchev_modern.txt", "r", encoding="utf-8") as f:
-    raw_text = f.read()
-print(raw_text[:500])
+    modern_text = f.read()
 
 with open("tyutchev_old.txt", "r", encoding="utf-8") as f:
-    raw_text = f.read()
-print(raw_text[:500])
+    old_text = f.read()
 ```
+This code opens my two text files containing Russian poems.
+```{python}
+title_split = old_text.split("===")
+title_split = [t.strip() for t in title_split if t != ""]
+poem_dict = {}
+poem_name = ""
+for t in title_split:
+    if t == t.upper():
+        poem_name = t
+        poem_dict[poem_name] = ""
+    else:
+        poem_dict[poem_name] += t
+
+old_words = []
+
+poems_cleaned = {}
+for poem_name, poem_text in poem_dict.items():
+    poems_cleaned[poem_name] = re.split(r"[\W]+", poem_text.lower())
+    poems_cleaned[poem_name] = [w for w in poems_cleaned[poem_name] if w != ""]
+    old_words += poems_cleaned[poem_name]
+
+print(old_words)
+```
+This code splits the old poems into individual words and removes blank spaces as well as non-word characters. I built dictionaries and then used those to store the poem titles and their corresponding text. Then I combined them at the end to get the cleaned words of the entire text.
+```{python}
+title_split = modern_text.split("===")
+title_split = [t.strip() for t in title_split if t != ""]
+poem_dict = {}
+poem_name = ""
+for t in title_split:
+    if t == t.upper():
+        poem_name = t
+        poem_dict[poem_name] = ""
+    else:
+        poem_dict[poem_name] += t
+
+modern_words = []
+
+m_poems_cleaned = {}
+for poem_name, poem_text in poem_dict.items():
+    m_poems_cleaned[poem_name] = re.split(r"[\W]+", poem_text.lower())
+    m_poems_cleaned[poem_name] = [w for w in m_poems_cleaned[poem_name] if w != ""]
+    modern_words += m_poems_cleaned[poem_name]
+
+print(modern_words)
+```
+This code splits the modern poems into individual words and removes blank spaces as well as non-word characters. I built dictionaries and then used those to store the poem titles and their corresponding text. Then I combined them at the end to get the cleaned words of the entire text.
+```{python}
+print(old_words[:20])
+print(old_words[-20:])
+print(modern_words[:20])
+print(modern_words[-20:])
+modern_length = len(modern_words)
+old_length = len(old_words)
+print(modern_length)
+print(old_length)
+```
+This code prints the first and last 20 words of the old and modern text. It also prints the length of each text.
+```{python}
+import pandas as pd
+
+old_rows = []
+for w in old_words:
+    old_rows.append({"word": w})
+
+old_df = pd.DataFrame(old_rows)
+print(len(old_df))
+print(old_df.head(10))
+print(old_df.tail(10))
+```
+This code creates a DataFrame for the words in the old text. It prints the length of the DataFrame as well as the first and last 10 rows.
+```{python}
+modern_rows = []
+for w in modern_words:
+    modern_rows.append({"word": w})
+
+modern_df = pd.DataFrame(modern_rows)
+print(len(modern_df))
+print(modern_df.head(10))
+print(modern_df.tail(10))
+```
+This code creates a DataFrame for the words in the modern text. It prints the length of the DataFrame as well as the first and last 10 rows.
+```{python}
+old_df.to_csv("project2_finn_julia_old.csv", index=False, encoding="utf-8-sig")
+modern_df.to_csv("project2_finn_julia_modern.csv", index=False, encoding="utf-8-sig")
+```
+This code saves the DataFrames to CSV files.
+```{python}
+check1 = pd.read_csv("project2_finn_julia_old.csv")
+print(len(old_df), len(check1))
+check1.head()
+```
+This code reads the saved old text CSV file and prints the length of it as well as the first few rows.
+```{python}
+check2 = pd.read_csv("project2_finn_julia_modern.csv")
+print(len(modern_df), len(check2))
+check2.head()
+```
+This code reads the saved modern text CSV file and prints the length of it as well as the first few rows.
+
+I used AI to help brainstorm how to store the poems names and their corresponding text. I also used AI auto-complete in VS code when copying the same code and changing the variable names.
+
+1.	The Raw Data
+My raw data is composed of two text files that each contain three poems by Tyutchev. I used ChatGPT to create the text files. I did not change my dataset from Component 1.
+https://github.com/juliafinn9/LIN_301/blob/main/course_project/project1_finn_julia.qmd
+
+2.	Cleaning Steps
+
+When I cleaned my data, I first split my text from the titles of the poems. Then I split the text and removed white space as well as non-word characters. After that, I lowercased my data. Finally, I removed all empty strings.
+I lowercased the text, which I believe will make the data a lot easier to analyze. However, it cost me being able to see what word each line starts with. However, if this becomes a problem later on, I can adjust my code. 
+
+3.	The Clean Table
+I created two tables for each text file. In my DataFrame, I created a row that gives the number of order of each word in the text. The column I made gives each word in the text. There are 420 rows in each table (420 words in each text file, excluding title names)
+
+4.	Still Messy
+
+When I created these text files from ChatGPT, I didn’t notice that the diacritics above a specific letter wasn’t included. I noticed this as I was looking through my data during this project. Before Component 3, I need to go and look back at the original source that ChatGPT got the poems from and see if the diacritics were included. If they were, I will need to figure out how to address that problem. 
+There is nothing in my data, that I wish I had kept. 
+
