@@ -4,15 +4,6 @@ import pandas as pd
 
 HERE = os.path.dirname(__file__)   # the folder lin301.py lives in: data/
 
-stopwords = ["the", "to", "and", "of", "a", "her", "i", "in", "was", "it",
-             "she", "he", "be", "that", "you", "not", "had", "as", "his", "for",
-             "with", "is", "have", "but", "at", "so", "all", "my", "been", "him",
-             "on", "by", "could", "would", "very", "no", "what", "which", "they",
-             "were", "there", "me", "an", "must", "this", "said", "from", "or",
-             "will", "any", "much", "than", "such", "their", "them", "if", "do",
-             "did", "one", "when", "your", "more", "are", "we", "who", "up",
-             "out", "down", "into", "s", "t"]
-
 def ttr(words):
     return len(set(words)) / len(words)
 
@@ -62,6 +53,27 @@ def report(title, words):
     print(title, "-ly words per 1,000:", ly_rate(words))
     return ttr_first(words)
 
+def book_to_df(filename, label):
+    text = load_text(filename)
+    chapters = re.split(r"(?im)^CHAPTER\s+(?:[IVXLCDM]+|\d+)\b", text)
+    chapters = chapters[1:]
+    rows = []
+    chapter_num = 0
+    for chapter in chapters:
+        chapter_num += 1
+        words = re.split(r"[\W_]+", chapter.lower())
+        words = [w for w in words if w != ""]
+        for w in words:
+            rows.append({"word": w, "chapter": chapter_num})
+    df = pd.DataFrame(rows)
+    df["text"] = label
+    return df
+
+def add_columns(df):
+    df["length"] = df["word"].str.len()
+    df["is_ly"] = df["word"].str.endswith("ly")
+    return df
+
 def book_to_spacy_df(filename, label, nlp):
     text = load_text(filename)
     chapters = re.split(r"(?im)^CHAPTER\s+(?:[IVXLCDM]+|\d+)\b", text)
@@ -71,19 +83,39 @@ def book_to_spacy_df(filename, label, nlp):
     for chapter in chapters:
         chapter_num += 1
         doc = nlp(chapter)
-        for token in doc:
-            if token.is_alpha:
-                rows.append({"word": token.text.lower(),
-                             "lemma": token.lemma_.lower(),
-                             "pos": token.pos_,
-                             "is_stop": token.is_stop,
-                             "chapter": chapter_num})
+        sentence_num = 0
+        for sent in doc.sents:
+            sentence_num += 1
+            for token in sent:
+                if token.is_alpha:
+                    rows.append({"word": token.text.lower(),
+                                 "lemma": token.lemma_.lower(),
+                                 "pos": token.pos_,
+                                 "is_stop": token.is_stop,
+                                 "sentence": sentence_num,
+                                 "chapter": chapter_num})
     df = pd.DataFrame(rows)
     df["text"] = label
     return df
 
-def add_columns(df, stopwords):
-    df["length"] = df["word"].str.len()
-    df["is_ly"] = df["word"].str.endswith("ly")
-    df["is_stopword"] = df["word"].isin(stopwords)
+def book_to_svo_df(filename, label, nlp):
+    text = load_text(filename)
+    chapters = re.split(r"(?im)^CHAPTER\s+(?:[IVXLCDM]+|\d+)\b", text)
+    chapters = chapters[1:]
+    rows = []
+    chapter_num = 0
+    for chapter in chapters:
+        chapter_num += 1
+        doc = nlp(chapter)
+        for token in doc:
+            if token.pos_ == "VERB":
+                subjects = [c for c in token.children if c.dep_ == "nsubj"]
+                objects = [c for c in token.children if c.dep_ == "dobj"]
+                if subjects and objects:
+                    rows.append({"subject": subjects[0].lemma_.lower(),
+                                 "verb": token.lemma_.lower(),
+                                 "object": objects[0].lemma_.lower(),
+                                 "chapter": chapter_num})
+    df = pd.DataFrame(rows)
+    df["text"] = label
     return df
