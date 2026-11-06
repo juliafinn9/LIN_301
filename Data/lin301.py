@@ -1,6 +1,9 @@
 import os
 import re
 import pandas as pd
+import nltk
+nltk.download("wordnet")
+from nltk.corpus import wordnet as wn
 
 HERE = os.path.dirname(__file__)   # the folder lin301.py lives in: data/
 
@@ -119,3 +122,19 @@ def book_to_svo_df(filename, label, nlp):
     df = pd.DataFrame(rows)
     df["text"] = label
     return df
+
+def is_vowel(letter):
+    vowels = "aeiouāēīōū"
+    if letter in vowels:
+        return True
+    else:
+        return False
+
+def cv_pattern(word):
+    for letter in word:
+        if is_vowel(letter):
+            return "v"
+        else:
+            return "c"
+
+
