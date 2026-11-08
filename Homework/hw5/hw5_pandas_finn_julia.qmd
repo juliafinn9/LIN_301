@@ -60,13 +60,12 @@ gilmore_df["length"] = [len(w) for w in gilmore_df["line"]]
 gilmore_df["is_rory"] = gilmore_df["line"].str.lower().str.contains("rory")
 gilmore_df["lower"] = gilmore_df["line"].str.lower()
 
-check(gilmore_df)
 ```
 At the beginning of the code, I created my variables for my data frame. After that, I created an empty list and appended my variables into it. I used zip so that everythibg will be lined up correctly. I then created a data frame and used the variables from my previous list as columns. I also created three new columns for the data frame: length of the line, if rory is present in the line, and the line lowercased.
 ```{python}
 gilmore_df.to_csv("hw5_finn_julia.csv", index=False, encoding="utf-8-sig")
 check = pd.read_csv("hw5_finn_julia.csv")
-print(gilmore_df.head(10))
+print(check)
 ```
 This code saves gilmore_df into an csv, reads it and prints the first ten rows.
 
