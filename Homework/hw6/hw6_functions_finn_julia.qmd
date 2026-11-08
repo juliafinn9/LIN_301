@@ -15,7 +15,52 @@ hawaiian_words_df["cv"] = [cv_pattern(w) for w in hawaiian_words_df["word"]]
 hawaiian_words_df["syllable"] = [".".join(syllabify(w)) for w in hawaiian_words_df["word"]]
 hawaiian_words_df["n_syllables"] = [count_syllables(w) for w in hawaiian_words_df["word"]]
 print(hawaiian_words_df)
-
 ```
-This code is looping through words in the dataframe to apply the cv_pattern function.
-I used AI to help me brainstorm how to write the function for dividing words into syllables.
+This code is looping through words in the dataframe to apply each function.
+```{python}
+print(hawaiian_words_df["n_syllables"].mean())
+```
+This code prints the average amount of syllables per word. Most words have 3 syllables. 
+```{python}
+print(hawaiian_words_df.sort_values("n_syllables", ascending=False).head(10))
+```
+This code prints the sorted dataframe by number of syllables. The word with the most syllables is humuhumunukunukuāpuaʻa (with 12 syllables)
+```{python}
+print(hawaiian_words_df.groupby("n_syllables")["word"].nunique())     
+```
+This code prints the number of words for each number of syllables.
+```{python}
+print(hawaiian_words_df["cv"].str.contains("CC"))
+```
+This code prints whether each word contains a double consonant.
+```{python}
+print(hawaiian_words_df["cv"].str.endswith("C"))
+```
+This code prints whether each word ends with a consonant.
+```{python}
+rows = []
+for w in hawaiian_words_df["word"]:
+    for s in syllabify(w):
+        rows.append({"word": w, "syllable": s})
+syllable_df = pd.DataFrame(rows)
+print(syllable_df)
+```
+This code creates a dataframe with one row per syllable.
+```{python}
+print(syllable_df["syllable"].value_counts().head(10))
+```
+This code prints the top 10 most common syllables.
+```{python}
+print(cv_pattern("banana"))
+print(cv_pattern("splash"))
+print(cv_pattern("strengths"))
+print(syllabify("banana"))
+print(syllabify("splash"))
+print(syllabify("strengths"))
+```
+This code uses cv_pattern and syllabify on English words. 
+
+The cv_pattern function correctly identified the consonant and vowel pattern. However, syllabify only worked on banana. Syllabify also cut off the end of the word in splash and strengths because those words end with consonants/ the last syllable ends with a consonant. In Hawaiian all syllables end on a vowel, while in English, syllables can end with consonants.
+
+
+I used AI to help me brainstorm how to write the function for dividing words into syllables. I also used AI autocomplete to make the process faster, such as copying code but changing the variable names.
