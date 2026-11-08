@@ -1,0 +1,21 @@
+
+```{python}
+import sys
+sys.path.append("../../data")
+from lin301 import *
+```
+This code imports the functions from my lin301 python file.
+```{python}
+hawaiian_words_df = pd.read_csv("hawaiian_words.csv")
+print(hawaiian_words_df)
+```
+This code reads the csv file and prints it.
+```{python}
+hawaiian_words_df["cv"] = [cv_pattern(w) for w in hawaiian_words_df["word"]]
+hawaiian_words_df["syllable"] = [".".join(syllabify(w)) for w in hawaiian_words_df["word"]]
+hawaiian_words_df["n_syllables"] = [count_syllables(w) for w in hawaiian_words_df["word"]]
+print(hawaiian_words_df)
+
+```
+This code is looping through words in the dataframe to apply the cv_pattern function.
+I used AI to help me brainstorm how to write the function for dividing words into syllables.

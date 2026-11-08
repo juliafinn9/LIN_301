@@ -131,10 +131,25 @@ def is_vowel(letter):
         return False
 
 def cv_pattern(word):
+    pattern = ""
     for letter in word:
         if is_vowel(letter):
-            return "v"
+            pattern += "v"
         else:
-            return "c"
+            pattern += "c"
+    return pattern
+
+def syllabify(word):
+    syllables = []
+    syllable = ""
+    for letter in word:
+        syllable += letter
+        if is_vowel(letter):
+            syllables.append(syllable)
+            syllable = ""
+    return syllables
+
+def count_syllables(word):
+    return len(syllabify(word))
 
 
