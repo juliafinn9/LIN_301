@@ -1,11 +1,9 @@
 import os
 import re
 import pandas as pd
-import nltk
-nltk.download("wordnet")
 from nltk.corpus import wordnet as wn
 
-HERE = os.path.dirname(__file__)   # the folder lin301.py lives in: data/
+HERE = os.path.dirname(__file__)   
 
 def ttr(words):
     return len(set(words)) / len(words)
@@ -122,6 +120,13 @@ def book_to_svo_df(filename, label, nlp):
     df = pd.DataFrame(rows)
     df["text"] = label
     return df
+
+def is_a(word, category):
+    for synset in wn.synsets(word, pos=wn.NOUN):
+        for path in synset.hypernym_paths():
+            if category in path:
+                return True
+    return False
 
 def is_vowel(letter):
     vowels = "aeiouāēīōū"
