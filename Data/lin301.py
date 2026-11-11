@@ -3,7 +3,7 @@ import re
 import pandas as pd
 from nltk.corpus import wordnet as wn
 
-HERE = os.path.dirname(__file__)   
+HERE = os.path.dirname(__file__)   # the folder lin301.py lives in: data/
 
 def ttr(words):
     return len(set(words)) / len(words)
@@ -54,6 +54,27 @@ def report(title, words):
     print(title, "-ly words per 1,000:", ly_rate(words))
     return ttr_first(words)
 
+def book_to_df(filename, label):
+    text = load_text(filename)
+    chapters = re.split(r"(?im)^CHAPTER\s+(?:[IVXLCDM]+|\d+)\b", text)
+    chapters = chapters[1:]
+    rows = []
+    chapter_num = 0
+    for chapter in chapters:
+        chapter_num += 1
+        words = re.split(r"[\W_]+", chapter.lower())
+        words = [w for w in words if w != ""]
+        for w in words:
+            rows.append({"word": w, "chapter": chapter_num})
+    df = pd.DataFrame(rows)
+    df["text"] = label
+    return df
+
+def add_columns(df):
+    df["length"] = df["word"].str.len()
+    df["is_ly"] = df["word"].str.endswith("ly")
+    return df
+
 def book_to_spacy_df(filename, label, nlp, chapter_word="CHAPTER"):
     text = load_text(filename)
     chapters = re.split(r"(?m)^" + chapter_word + r"\b.*$", text)
@@ -72,35 +93,6 @@ def book_to_spacy_df(filename, label, nlp, chapter_word="CHAPTER"):
                                  "lemma": token.lemma_.lower(),
                                  "pos": token.pos_,
                                  "morph": str(token.morph),
-                                 "is_stop": token.is_stop,
-                                 "sentence": sentence_num,
-                                 "chapter": chapter_num})
-    df = pd.DataFrame(rows)
-    df["text"] = label
-    return df
-
-def add_columns(df):
-    df["length"] = df["word"].str.len()
-    df["is_ly"] = df["word"].str.endswith("ly")
-    return df
-
-def book_to_spacy_df(filename, label, nlp):
-    text = load_text(filename)
-    chapters = re.split(r"(?im)^CHAPTER\s+(?:[IVXLCDM]+|\d+)\b", text)
-    chapters = chapters[1:]
-    rows = []
-    chapter_num = 0
-    for chapter in chapters:
-        chapter_num += 1
-        doc = nlp(chapter)
-        sentence_num = 0
-        for sent in doc.sents:
-            sentence_num += 1
-            for token in sent:
-                if token.is_alpha:
-                    rows.append({"word": token.text.lower(),
-                                 "lemma": token.lemma_.lower(),
-                                 "pos": token.pos_,
                                  "is_stop": token.is_stop,
                                  "sentence": sentence_num,
                                  "chapter": chapter_num})
