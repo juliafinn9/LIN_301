@@ -1,0 +1,47 @@
+```{python}
+import sys
+sys.path.append("../../data")
+from lin301 import *
+
+import unicodedata
+import spacy
+nlp_it = spacy.load("it_core_news_sm")
+```
+```{python}
+for c in "aγж猫はコ":
+    print(c, unicodedata.name(c))
+```
+```{python}
+def script_of(char):
+    return unicodedata.name(char).split()[0]
+
+print(script_of("γ"), script_of("猫"), script_of("は"))
+```
+```{python}
+ja = "猫はコウモリを食べるの？"   # 'Do cats eat bats?'
+
+rows = []
+for c in ja:
+    if c.isalpha():
+        rows.append({"char": c, "script": script_of(c)})
+
+pd.DataFrame(rows).groupby("script").size()
+```
+```{python}
+el = "Η γάτα κοιμάται στον καναπέ."
+ru = "Кошка спит на диване."
+ja2 = "猫はソファで寝ます。"
+print(len(el), len(ru), len(ja2))
+for sentence in [el, ru, ja2]:
+    rows = []
+    for c in sentence:
+        if c.isalpha():
+            rows.append({"char": c, "script": script_of(c)})
+    print(pd.DataFrame(rows).groupby("script").size())
+```
+```{python}
+zh = "猫吃蝙蝠吗？"           # 'Do cats eat bats?'
+print(zh.split())
+print(ja.split())
+```
+

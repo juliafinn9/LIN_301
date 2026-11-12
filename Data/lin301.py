@@ -122,8 +122,8 @@ def book_to_svo_df(filename, label, nlp):
     df["text"] = label
     return df
 
-def is_a(word, category):
-    for synset in wn.synsets(word, pos=wn.NOUN):
+def is_a(word, category, lang="eng"):
+    for synset in wn.synsets(word, pos=wn.NOUN, lang=lang):
         for path in synset.hypernym_paths():
             if category in path:
                 return True
