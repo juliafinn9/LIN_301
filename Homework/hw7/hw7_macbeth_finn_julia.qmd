@@ -2,4 +2,67 @@
 import sys
 sys.path.append("../../data")
 from lin301 import *
+import spacy
+import unicodedata
+import nltk
+from nltk.corpus import wordnet as wn
 ```
+This code imports the functions of the LIN301 python file. It also imports what's needed for the project. 
+```{python}
+en_words = load_words("macbeth_en.txt")
+el_words = load_words("macbeth_el.txt")
+fi_words = load_words("macbeth_fi.txt")
+print(en_words[:30])
+print(el_words[:30])
+print(fi_words[:30])
+```
+This code loads the words from each version of Macbeth. I also printed the first 30 words of each version. 
+```{python}
+en_words = en_words[232:]
+print(en_words[:30])
+```
+
+```{python}
+el_words = el_words[:500]
+print(el_words[:30])
+```
+```{python}
+nlp_en = spacy.load("en_core_web_sm")
+en = book_to_spacy_df("macbeth_en.txt", "English", nlp_en, "ACT")
+print(en)
+```
+This code creates a spaCy Dataframe for the English version of Macbeth.
+```{python}
+nlp_fi = spacy.load("fi_core_news_sm")
+fi = book_to_spacy_df("macbeth_fi.txt", "Finnish", nlp_fi, "NÄYTÖS.")
+print(fi)
+```
+This code creates a spaCy Dataframe for the Finnish version of Macbeth.
+```{python}
+nlp_el = spacy.load("el_core_news_sm")
+el = book_to_spacy_df("macbeth_el.txt", "Greek", nlp_el, "ΠΡΩΤΗ")
+print(el)
+```
+This code creates a spaCy Dataframe for the Greek version of Macbeth.
+```{python}
+for df in [en, fi, el]:
+    print(df["text"][0], round((df["pos"] == "PRON").mean() * 1000, 1))
+```
+This code prints the percentage of pronouns in each version. 
+```{python}
+for df in [en, fi, el]:
+    print(df["text"][0], round((df["pos"] == "ADJ").mean() * 1000, 1))
+```
+This code prints the percentage of adjectives in each version.
+```{python}
+for df in [en, fi, el]:
+    print(df["text"][0], round((df["pos"] == "NOUN").mean() * 1000, 1))
+```
+This code prints the percentage of nouns in each version.
+```{python}
+el_nouns = el[el["pos"] == "NOUN"]
+print("Feminine:", el_nouns["morph"].str.contains("Gender=Fem").sum())
+print("Masculine:", el_nouns["morph"].str.contains("Gender=Masc").sum())
+print("Neuter:", el_nouns["morph"].str.contains("Gender=Neut").sum())
+```
+This code prints the number of feminine, masculine, and neuter nouns in the Greek version of Macbeth.

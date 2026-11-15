@@ -3,7 +3,7 @@ import re
 import pandas as pd
 from nltk.corpus import wordnet as wn
 
-HERE = os.path.dirname(__file__)   # the folder lin301.py lives in: data/
+HERE = os.path.dirname(__file__)   
 
 def ttr(words):
     return len(set(words)) / len(words)
