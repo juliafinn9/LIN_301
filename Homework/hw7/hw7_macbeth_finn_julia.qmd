@@ -12,35 +12,26 @@ This code imports the functions of the LIN301 python file. It also imports what'
 en_words = load_words("macbeth_en.txt")
 el_words = load_words("macbeth_el.txt")
 fi_words = load_words("macbeth_fi.txt")
-print(en_words[:30])
-print(el_words[:30])
-print(fi_words[:30])
 ```
 This code loads the words from each version of Macbeth. I also printed the first 30 words of each version. 
 ```{python}
-en_words = en_words[232:]
-print(en_words[:30])
-```
-
-```{python}
-el_words = el_words[:500]
-print(el_words[:30])
-```
-```{python}
 nlp_en = spacy.load("en_core_web_sm")
 en = book_to_spacy_df("macbeth_en.txt", "English", nlp_en, "ACT")
+print(len(en))
 print(en)
 ```
 This code creates a spaCy Dataframe for the English version of Macbeth.
 ```{python}
 nlp_fi = spacy.load("fi_core_news_sm")
-fi = book_to_spacy_df("macbeth_fi.txt", "Finnish", nlp_fi, "NÄYTÖS.")
+fi = book_to_spacy_df("macbeth_fi.txt", "Finnish", nlp_fi, ".*NÄYTÖS")
+print(len(fi))
 print(fi)
 ```
 This code creates a spaCy Dataframe for the Finnish version of Macbeth.
 ```{python}
 nlp_el = spacy.load("el_core_news_sm")
-el = book_to_spacy_df("macbeth_el.txt", "Greek", nlp_el, "ΠΡΩΤΗ")
+el = book_to_spacy_df("macbeth_el.txt", "Greek", nlp_el, "ΠΡΑΞΙΣ")
+print(len(el))
 print(el)
 ```
 This code creates a spaCy Dataframe for the Greek version of Macbeth.
@@ -58,7 +49,8 @@ This code prints the percentage of adjectives in each version.
 for df in [en, fi, el]:
     print(df["text"][0], round((df["pos"] == "NOUN").mean() * 1000, 1))
 ```
-This code prints the percentage of nouns in each version.
+This code prints the amount of nouns per 1000 words in each version. 
+The largest difference is the greater amount of nouns in the Finnish version compared to English and Greek. This may me because Finnish has a larger noun to parts of speech ratio. 
 ```{python}
 el_nouns = el[el["pos"] == "NOUN"]
 print("Feminine:", el_nouns["morph"].str.contains("Gender=Fem").sum())
@@ -66,3 +58,8 @@ print("Masculine:", el_nouns["morph"].str.contains("Gender=Masc").sum())
 print("Neuter:", el_nouns["morph"].str.contains("Gender=Neut").sum())
 ```
 This code prints the number of feminine, masculine, and neuter nouns in the Greek version of Macbeth.
+English doesn't overtly have gendered nouns, however there are some exceptions (actor vs actress) 
+
+I think the main differences in the three versions is due to the language. The Finnish version has a much lower word count than the other versions, this may be due to Finnish being a highly inflected language. Also, English has a larger pronoun ratio than the Finnish and Greek versions. This may be because English is inflected much less compared to Finnish and Greek. 
+
+I used AI for autocomplete when repeating the same code but changing variable names. 
